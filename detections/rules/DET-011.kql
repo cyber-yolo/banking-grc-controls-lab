@@ -1,0 +1,11 @@
+// DET-011 Repeated MFA denials or timeouts for one user
+// Template variables: min_mfa_failures
+SigninLogs
+| where ResultType == "500121"
+| summarize MfaFailures = count(),
+            IPs = make_set(IPAddress, 10),
+            FirstSeen = min(TimeGenerated),
+            LastSeen = max(TimeGenerated)
+            by UserPrincipalName, bin(TimeGenerated, 15m)
+| where MfaFailures >= ${min_mfa_failures}
+| project-away TimeGenerated

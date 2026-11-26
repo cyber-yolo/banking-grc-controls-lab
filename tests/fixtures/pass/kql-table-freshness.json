@@ -1,0 +1,30 @@
+{
+  "item": "KqlTableFreshness",
+  "method": "fixture",
+  "target": "synthetic",
+  "collected_at": "2026-12-03T14:05:00Z",
+  "status": "ok",
+  "error": null,
+  "value": [
+    {
+      "TableName": "SigninLogs",
+      "rows": 10
+    },
+    {
+      "TableName": "AuditLogs",
+      "rows": 10
+    },
+    {
+      "TableName": "OfficeActivity",
+      "rows": 10
+    },
+    {
+      "TableName": "AzureActivity",
+      "rows": 10
+    },
+    {
+      "TableName": "SecurityAlert",
+      "rows": 10
+    }
+  ]
+}

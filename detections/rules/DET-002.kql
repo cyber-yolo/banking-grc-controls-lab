@@ -1,0 +1,12 @@
+// DET-002 Mailbox forwarding to an external domain
+// Template variables: internal_domain
+OfficeActivity
+| where OfficeWorkload == "Exchange"
+| where Operation in~ ("New-InboxRule", "Set-InboxRule", "Set-Mailbox", "UpdateInboxRules")
+| mv-expand Param = todynamic(Parameters)
+| where tostring(Param.Name) in~ ("ForwardTo", "RedirectTo", "ForwardAsAttachmentTo", "ForwardingSmtpAddress", "ForwardingAddress")
+| extend Destination = tostring(Param.Value)
+| extend DestinationDomain = tolower(extract(@"@([A-Za-z0-9.\-]+)", 1, Destination))
+| where isnotempty(DestinationDomain)
+| where DestinationDomain != "${internal_domain}" and not(DestinationDomain endswith ".onmicrosoft.com")
+| project TimeGenerated, UserId, Operation, Destination, DestinationDomain, ClientIP

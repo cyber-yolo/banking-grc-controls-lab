@@ -1,0 +1,43 @@
+framework: LU
+jurisdiction: LU
+instrument: Luxembourg financial sector law and CSSF circulars
+source_url: https://www.cssf.lu/en/
+applies_from: "various"
+verified_on: null
+requirements:
+  - id: REQ-LU-01
+    reference: Law of 5 April 1993 on the financial sector, Art. 41
+    topic: Professional secrecy of credit institutions and other professionals of the financial sector, with defined exceptions (including outsourcing conditions).
+    confidence: high
+    lab_scope: in
+    note: Client identifiers (IBAN, client numbers) are treated as secrecy-relevant data in DLP controls.
+  - id: REQ-LU-02
+    reference: CSSF Circular 20/750, as amended (latest seen 25/881 and 26/915)
+    topic: Requirements on ICT and security risk management (transposition of EBA/GL/2019/04), now applied alongside DORA.
+    confidence: medium
+    lab_scope: partial
+    note: CSSF communique of April 2025 (updated 2026-08-27) says requirements remain for non-DORA entities; how much still applies to DORA credit institutions is TO VERIFY.
+  - id: REQ-LU-03
+    reference: CSSF Circular 25/882, as amended by 26/915
+    topic: Use of ICT third-party services by financial entities subject to DORA, including notification of new arrangements for critical or important functions and the register of information.
+    confidence: medium
+    lab_scope: in
+    note: Seen on the CSSF communique of April 2025; not yet read in full.
+  - id: REQ-LU-04
+    reference: CSSF Circular 22/806, as amended by 25/883 and 26/915
+    topic: Outsourcing arrangements. For DORA entities it now covers business process outsourcing only; ICT outsourcing moved to DORA and 25/882.
+    confidence: medium
+    lab_scope: out
+    note: Business process outsourcing is out of the lab scope. Kept to document the scope change.
+  - id: REQ-LU-05
+    reference: CSSF Circular 12/552, as amended
+    topic: Central administration, internal governance and risk management of credit institutions.
+    confidence: high
+    lab_scope: partial
+    note: Governance context for control ownership; specific points TO VERIFY.
+  - id: REQ-LU-06
+    reference: National DORA law designating the CSSF as competent authority
+    topic: Supervisory powers and reporting channel for major ICT-related incidents in Luxembourg.
+    confidence: low
+    lab_scope: partial
+    note: Law date and number TO VERIFY. Reporting channel only matters for CTL-012 readiness.

@@ -1,0 +1,26 @@
+{
+  "item": "EntraDiagnosticSettings",
+  "method": "fixture",
+  "target": "synthetic",
+  "collected_at": "2026-12-03T14:05:00Z",
+  "status": "ok",
+  "error": null,
+  "value": [
+    {
+      "name": "diag-lab-entra",
+      "properties": {
+        "workspaceId": "<workspace-resource-id>",
+        "logs": [
+          {
+            "category": "SignInLogs",
+            "enabled": true
+          },
+          {
+            "category": "AuditLogs",
+            "enabled": false
+          }
+        ]
+      }
+    }
+  ]
+}

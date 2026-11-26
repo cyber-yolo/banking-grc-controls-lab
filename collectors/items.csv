@@ -1,0 +1,26 @@
+item,method,target,permission,output,notes
+ConditionalAccessPolicies,graph,/v1.0/identity/conditionalAccess/policies,Policy.Read.All,conditional-access-policies.json,
+BreakGlassUsers,graph,"/v1.0/users?$filter=startswith(userPrincipalName,'bg-')&$select=id,userPrincipalName,accountEnabled",User.Read.All,users-break-glass.json,
+RoleDefinitions,graph,"/v1.0/roleManagement/directory/roleDefinitions?$select=id,displayName,isBuiltIn,templateId",RoleManagement.Read.Directory,role-definitions.json,
+RoleAssignmentInstances,graph,/v1.0/roleManagement/directory/roleAssignmentScheduleInstances?$expand=principal,RoleManagement.Read.Directory,role-assignment-instances.json,$expand=principal support TO VERIFY; fallback without expand and join on principalId
+RoleEligibilityInstances,graph,/v1.0/roleManagement/directory/roleEligibilityScheduleInstances?$expand=principal,RoleManagement.Read.Directory,role-eligibility-instances.json,$expand=principal support TO VERIFY
+AccessReviewDefinitions,graph,/v1.0/identityGovernance/accessReviews/definitions,AccessReview.Read.All,access-review-definitions.json,
+Applications,graph,"/v1.0/applications?$select=id,appId,displayName,tags,passwordCredentials,keyCredentials,requiredResourceAccess&$expand=owners($select=id)",Application.Read.All,applications.json,$select combined with $expand TO VERIFY
+GraphAppRoles,graph,"/v1.0/servicePrincipals(appId='00000003-0000-0000-c000-000000000000')?$select=appRoles",Application.Read.All,graph-app-roles.json,Well-known public appId of Microsoft Graph
+DlpPolicies,ipps,Get-DlpCompliancePolicy,View-Only DLP Compliance Management (role group TO VERIFY),dlp-policies.json,Security & Compliance PowerShell
+DlpRules,ipps,Get-DlpComplianceRule,View-Only DLP Compliance Management (role group TO VERIFY),dlp-rules.json,Security & Compliance PowerShell
+EntraDiagnosticSettings,az-rest,https://management.azure.com/providers/microsoft.aadiam/diagnosticSettings?api-version=2017-04-01,Security Reader (tenant),entra-diagnostic-settings.json,api-version TO VERIFY
+Workspace,az,monitor log-analytics workspace show --resource-group {resource_group} --workspace-name {workspace},Reader,workspace.json,
+SentinelAlertRules,az-rest,https://management.azure.com/subscriptions/{subscription}/resourceGroups/{resource_group}/providers/Microsoft.OperationalInsights/workspaces/{workspace}/providers/Microsoft.SecurityInsights/alertRules?api-version=2024-09-01,Microsoft Sentinel Reader,sentinel-alert-rules.json,api-version TO VERIFY
+PolicyAssignments,az,policy assignment list,Reader,policy-assignments.json,
+PolicyComplianceSummary,az,policy state summarize,Reader,policy-compliance-summary.json,
+SecureScores,az-rest,https://management.azure.com/subscriptions/{subscription}/providers/Microsoft.Security/secureScores?api-version=2020-01-01,Security Reader,secure-scores.json,api-version TO VERIFY
+KqlMfaCoverage,kql,queries/CTL-001-mfa-coverage.kql,Log Analytics Reader,kql-mfa-coverage.json,
+KqlLegacyAuth,kql,queries/CTL-002-legacy-auth.kql,Log Analytics Reader,kql-legacy-auth.json,
+KqlPimActivations,kql,queries/CTL-003-pim-activations.kql,Log Analytics Reader,kql-pim-activations.json,
+KqlTableFreshness,kql,queries/CTL-010-table-freshness.kql,Log Analytics Reader,kql-table-freshness.json,
+AiSystemInventory,repo,ai-governance/ai-system-inventory.csv,none,,Read from the repository by the evaluator
+DetectionTestMatrix,repo,testing/detection-test-matrix.csv,none,,Read from the repository by the evaluator
+RegisterOfInformation,repo,third-parties/register-of-information.csv,none,,Read from the repository by the evaluator
+TabletopRecord,manual,testing/tabletop/TT-001.md,none,,Filled by hand during the tabletop
+RiskAcceptances,repo,risk/acceptances,none,,Read from the repository by the evaluator

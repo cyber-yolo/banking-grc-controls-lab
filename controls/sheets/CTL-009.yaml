@@ -1,0 +1,39 @@
+id: CTL-009
+name: Client identifiers blocked in external e-mail
+domain: Data protection
+type: preventive
+automation: semi-automated
+frequency: monthly
+status: written
+owner_role: Data protection engineering (first line)
+reviewer_role: Compliance (second line)
+objective: >
+  E-mails to external recipients containing client banking identifiers (IBAN)
+  are blocked or require justification, and each match raises an alert. This is
+  policy PV-POL-001 of the sister repository, re-used here as a tested control.
+risks: [RSK-03]
+requirements: [REQ-DORA-06, REQ-CH-03, REQ-CH-05, REQ-CH-09, REQ-CH-10, REQ-LU-01, REQ-GDPR-01]
+implementation:
+  platform: Microsoft Purview DLP (Exchange location)
+  configuration: PV-POL-001 as defined and tested in banking-dlp-controls-lab (TC-001 to TC-003).
+  terraform: null
+evidence:
+  - {id: EV-013, item: DlpPolicies, description: Purview DLP policies (export)}
+  - {id: EV-014, item: DlpRules, description: Purview DLP rules (export)}
+assertions:
+  - {id: CTL-009-A1, test: design, text: A DLP policy named PV-POL-001 exists, is enforced (mode Enable) and covers all Exchange mailboxes}
+  - {id: CTL-009-A2, test: design, text: At least one enabled rule of that policy matches an IBAN sensitive information type for recipients outside the organisation}
+tests:
+  design:
+    id: TC-317
+    steps:
+      - Rebuild PV-POL-001 from the sister repo. Run the collector for EV-013 and EV-014 and the evaluator.
+    expected: CTL-009-A1 and CTL-009-A2 PASS
+  effectiveness:
+    id: TC-318
+    steps:
+      - Re-run sister repo TC-001 (external e-mail with synthetic IBAN) on the rebuilt tenant.
+    expected: E-mail blocked, DLP alert, DET-001 incident after the third occurrence
+detections: [DET-001, DET-002, DET-007, DET-008]
+limits:
+  - Previous-tenant results (sister repo, 13 tests) prove the design once; they are not evidence for the rebuilt tenant.

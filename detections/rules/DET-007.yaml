@@ -1,0 +1,42 @@
+id: DET-007
+name: Mass download from SharePoint or OneDrive
+status: written
+severity: Medium
+banking_scenario: >
+  A departing relationship manager downloads the client portfolio library before
+  leaving, or a compromised account bulk-collects documents.
+tactics: [Collection]
+techniques: [T1530, T1213]
+attack: [T1530, T1213.002]
+attack_rationale: T1530 Data from Cloud Storage; T1213.002 Data from Information Repositories, SharePoint.
+data_sources: [OfficeActivity]
+query_file: DET-007.kql
+query_frequency: PT1H
+query_period: PT1H
+trigger_threshold: 0
+parameters:
+  min_files: 15
+thresholds:
+  lab: 15 distinct files downloaded by one user in 1 hour
+  production_starting_point: 100 files in 1 hour, or 3 times the user's 30-day hourly maximum (assumption)
+entities:
+  - {entity_type: Account, identifier: FullName, column: UserId}
+  - {entity_type: IP, identifier: Address, column: ClientIP}
+tests:
+  positive:
+    id: TC-213
+    steps:
+      - Upload 20 synthetic files (sister repo generator, SCN corpus) to a lab SharePoint library "Client Portfolio".
+      - As user1, select the 20 files and download them (zip download from the browser).
+    expected: One incident, Files >= 15
+  negative:
+    id: TC-214
+    steps:
+      - As user1, download 5 files one by one.
+    expected: No incident
+assumptions:
+  - A multi-file zip download logs one FileDownloaded event per file (TO CONFIRM in TC-213).
+false_positives:
+  - Sync client first synchronisation (FileSyncDownloadedFull) on a new laptop
+response: [PB-001, PB-002]
+controls: [CTL-009, CTL-011]

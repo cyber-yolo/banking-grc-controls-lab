@@ -1,0 +1,37 @@
+id: CTL-014
+name: Register of information on ICT third-party providers
+domain: Third-party risk
+type: detective
+automation: automated
+frequency: per-change
+status: written
+owner_role: Vendor management (first line)
+reviewer_role: ICT risk management (second line)
+objective: >
+  Every ICT service the lab depends on is in the register of information with
+  the fields the bank needs to report and to manage concentration and exit.
+risks: [RSK-09]
+requirements: [REQ-DORA-14, REQ-LU-03, REQ-CH-07, REQ-EBA-02]
+implementation:
+  platform: Repository file, checked in CI
+  configuration: third-parties/register-of-information.csv, reduced field set inspired by the DORA register templates.
+  terraform: null
+evidence:
+  - {id: EV-023, item: RegisterOfInformation, description: Register of information (repository file)}
+assertions:
+  - {id: CTL-014-A1, test: design, text: The register has every required column and no empty mandatory value}
+  - {id: CTL-014-A2, test: design, text: Every arrangement supporting a critical or important function has an exit plan reference and an assessment within the last 12 months}
+tests:
+  design:
+    id: TC-327
+    steps:
+      - Run the evaluator on the repository (offline, also in CI).
+    expected: CTL-014-A1 and CTL-014-A2 PASS
+  effectiveness:
+    id: TC-328
+    steps:
+      - Add a provider row without exit plan for a critical function in a branch; open a pull request.
+    expected: CI evaluator job reports A2 FAIL on that row
+detections: []
+limits:
+  - The real DORA register has many more templates and fields (Implementing Regulation (EU) 2024/2956, TO VERIFY). This register only shows the logic.

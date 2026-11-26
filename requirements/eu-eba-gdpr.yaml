@@ -1,0 +1,42 @@
+framework: EBA-GDPR
+jurisdiction: EU
+instrument: EBA Guidelines and GDPR provisions used as supporting references
+source_url: https://www.eba.europa.eu
+applies_from: "various"
+verified_on: null
+requirements:
+  - id: REQ-EBA-01
+    reference: EBA/GL/2019/04, section 3.4 (information security)
+    topic: Guidelines on ICT and security risk management, including logical security, identity and access management and security monitoring.
+    confidence: medium
+    lab_scope: in
+    note: Status after DORA TO VERIFY. The EBA announced an alignment of these guidelines with DORA; check whether section 3.4 still applies to credit institutions in scope of DORA.
+  - id: REQ-EBA-02
+    reference: EBA/GL/2019/02
+    topic: Guidelines on outsourcing arrangements, including an outsourcing register.
+    confidence: high
+    lab_scope: partial
+    note: For ICT services, DORA register of information applies; check current interplay (TO VERIFY).
+  - id: REQ-EBA-03
+    reference: EBA/GL/2021/05
+    topic: Guidelines on internal governance, including the three lines of defence and the role of control functions.
+    confidence: high
+    lab_scope: partial
+    note: Used to assign control owners (first line) and reviewers (second line) in control sheets.
+  - id: REQ-GDPR-01
+    reference: GDPR Art. 32
+    topic: Appropriate technical and organisational measures to ensure a level of security appropriate to the risk of personal data processing.
+    confidence: high
+    lab_scope: in
+  - id: REQ-GDPR-02
+    reference: GDPR Art. 33
+    topic: Notify a personal data breach to the supervisory authority without undue delay and, where feasible, within 72 hours.
+    confidence: high
+    lab_scope: partial
+    note: Readiness only, joined with DORA classification in CTL-012.
+  - id: REQ-GDPR-03
+    reference: GDPR Chapter V (Art. 44 to 50)
+    topic: Transfers of personal data to third countries only under the conditions of Chapter V.
+    confidence: high
+    lab_scope: partial
+    note: Lab enforces region choice for Azure resources only (CTL-013); Microsoft 365 data location is a tenant setting.

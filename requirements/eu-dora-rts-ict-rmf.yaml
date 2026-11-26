@@ -1,0 +1,42 @@
+framework: DORA-RTS-RMF
+jurisdiction: EU
+instrument: Commission Delegated Regulation (EU) 2024/1774 specifying ICT risk management tools, methods, processes and policies and the simplified ICT risk management framework
+source_url: https://eur-lex.europa.eu/eli/reg_del/2024/1774/oj
+applies_from: "2025-01-17"
+verified_on: null
+requirements:
+  - id: REQ-RMF-01
+    reference: Art. 20
+    topic: Identity management policies and procedures, unique identification of each identity and lifecycle of accounts.
+    confidence: high
+    lab_scope: in
+    note: Article title confirmed on a secondary source at design time; text still to read on EUR-Lex.
+  - id: REQ-RMF-02
+    reference: Art. 21
+    topic: Access control policy, including least privilege, need to know, segregation of duties, privileged and emergency access, periodic review of access rights and strong authentication.
+    confidence: high
+    lab_scope: in
+    note: Article title confirmed on a secondary source; list of sub-points is from memory and TO VERIFY.
+  - id: REQ-RMF-03
+    reference: Art. 12
+    topic: Logging procedures, protocols and tools, including what is logged, retention and protection of logs.
+    confidence: medium
+    lab_scope: in
+  - id: REQ-RMF-04
+    reference: Art. 23
+    topic: Detection of anomalous activities and criteria that trigger ICT-related incident detection and response.
+    confidence: medium
+    lab_scope: in
+    note: Chapter on incident detection and response (Art. 22 and 23) confirmed; exact split between the two articles TO VERIFY.
+  - id: REQ-RMF-05
+    reference: Art. 10
+    topic: Vulnerability and patch management procedures.
+    confidence: low
+    lab_scope: partial
+    note: Lab covers cloud configuration weaknesses (Defender for Cloud), not OS patching.
+  - id: REQ-RMF-06
+    reference: Art. 4 and 5
+    topic: ICT asset management policy and procedure, including an inventory of ICT assets.
+    confidence: low
+    lab_scope: partial
+    note: Identity inventory only.

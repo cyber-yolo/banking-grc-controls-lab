@@ -1,0 +1,41 @@
+id: DET-011
+name: Repeated MFA denials or timeouts for one user
+status: written
+severity: Medium
+banking_scenario: >
+  MFA fatigue: an attacker with a valid password sends push requests until the
+  employee approves one. Often the step just before a fraudulent payment approval.
+tactics: [CredentialAccess]
+techniques: [T1621]
+attack: [T1621]
+attack_rationale: T1621 Multi-Factor Authentication Request Generation.
+data_sources: [SigninLogs]
+query_file: DET-011.kql
+query_frequency: PT15M
+query_period: PT1H
+trigger_threshold: 0
+parameters:
+  min_mfa_failures: 3
+thresholds:
+  lab: 3 MFA failures (denied or not answered) for one user in 15 minutes
+  production_starting_point: same (assumption)
+entities:
+  - {entity_type: Account, identifier: FullName, column: UserPrincipalName}
+assumptions:
+  - Result codes 500121 (strong authentication failed) and 50074/50076 behaviour to confirm in TC-221. Needs a phone with the authenticator app registered for user1.
+tests:
+  positive:
+    id: TC-221
+    steps:
+      - Sign in as user1 with the right password, deny the push on the phone. Repeat 3 times within 10 minutes.
+    expected: One incident for user1
+  negative:
+    id: TC-222
+    steps:
+      - Deny once, then approve.
+    expected: No incident
+false_positives:
+  - User whose phone lost network during several attempts
+response: [PB-001, PB-003]
+controls: [CTL-001, CTL-011]
+optional: true

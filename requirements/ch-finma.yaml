@@ -1,0 +1,83 @@
+framework: CH
+jurisdiction: CH
+instrument: Swiss banking law, FINMA circulars and guidance, Federal Act on Data Protection
+source_url: https://www.finma.ch/en/documentation/circulars/
+applies_from: "various"
+verified_on: null
+requirements:
+  - id: REQ-CH-01
+    reference: FINMA Circular 2023/1 Operational risks and resilience - banks, ICT risk management section
+    topic: ICT strategy, inventory of ICT assets, change and operations management, and identity and access management as part of operational risk management.
+    confidence: medium
+    lab_scope: in
+    note: In force since 2024-01-01. Margin numbers TO VERIFY on the FINMA PDF; a secondary mapping places identity and access management around margin no. 59 to 60.
+  - id: REQ-CH-02
+    reference: FINMA Circular 2023/1, cyber risk management section
+    topic: Identify, protect, detect, respond to and recover from cyber attacks, including logging and monitoring and regular vulnerability assessments.
+    confidence: medium
+    lab_scope: in
+    note: Margin numbers TO VERIFY.
+  - id: REQ-CH-03
+    reference: FINMA Circular 2023/1, critical data section
+    topic: Identify critical data, classify it, and protect its confidentiality, integrity and availability over its lifecycle, including access restrictions.
+    confidence: medium
+    lab_scope: in
+    note: Margin numbers TO VERIFY.
+  - id: REQ-CH-04
+    reference: FINMA Circular 2023/1, operational resilience section
+    topic: Identify critical functions, set tolerances for disruption and show the bank can stay within them.
+    confidence: medium
+    lab_scope: out
+    note: Transition deadline believed to be 2026-01-01, TO VERIFY. Needs a business model the lab does not have.
+  - id: REQ-CH-05
+    reference: FINMA Circular 2023/1, annex on handling electronic client data
+    topic: Principles for confidentiality of electronic client identifying data (CID), including access by staff and third parties and storage location.
+    confidence: low
+    lab_scope: in
+    note: Believed to take over the former Circular 2008/21 Annex 3 principles. Annex number and content TO VERIFY.
+  - id: REQ-CH-06
+    reference: FINMA Guidance 05/2020, Art. 29(2) FINMASA
+    topic: "Report cyber attacks on critical assets to FINMA: first assessment within 24 hours and full report within 72 hours."
+    confidence: medium
+    lab_scope: partial
+    note: Readiness only. Later FINMA guidance on cyber risks (03/2024) and the federal reporting duty for critical infrastructure under the Information Security Act may apply in parallel (TO VERIFY).
+  - id: REQ-CH-07
+    reference: FINMA Circular 2018/3 Outsourcing - banks and insurers
+    topic: Inventory of outsourced functions, due diligence, contract terms, audit and supervisory access, outsourcing abroad.
+    confidence: high
+    lab_scope: partial
+    note: Register of the lab's providers only.
+  - id: REQ-CH-08
+    reference: FINMA Guidance 08/2024 on governance and risk management when using artificial intelligence
+    topic: Supervisory expectations on AI inventory, risk classification, data quality, testing, explainability and independent review.
+    confidence: medium
+    lab_scope: partial
+    note: Guidance, not binding law. Number and date TO VERIFY.
+  - id: REQ-CH-09
+    reference: Banking Act (SR 952.0), Art. 47
+    topic: Bank client confidentiality (banking secrecy), with criminal sanctions for disclosure.
+    confidence: high
+    lab_scope: in
+  - id: REQ-CH-10
+    reference: Federal Act on Data Protection (FADP, SR 235.1), Art. 8
+    topic: Data security appropriate to the risk, through technical and organisational measures.
+    confidence: high
+    lab_scope: in
+  - id: REQ-CH-11
+    reference: Data Protection Ordinance (DPO, SR 235.11), Art. 4
+    topic: Logging of processing in specific high-risk cases, with log retention for at least one year.
+    confidence: medium
+    lab_scope: partial
+    note: Trigger conditions and retention period TO VERIFY.
+  - id: REQ-CH-12
+    reference: FADP Art. 16 and 17
+    topic: Disclosure of personal data abroad only to countries with adequate protection or with appropriate safeguards.
+    confidence: high
+    lab_scope: partial
+    note: Lab enforces Azure region choice (CTL-013).
+  - id: REQ-CH-13
+    reference: FADP Art. 24
+    topic: Notify the FDPIC as soon as possible of a data security breach likely to cause a high risk.
+    confidence: high
+    lab_scope: partial
+    note: Readiness only, joined with CTL-012.

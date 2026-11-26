@@ -1,0 +1,16 @@
+// DET-006 Privileged Entra ID role assigned
+let privileged_roles = dynamic(["Global Administrator", "Privileged Role Administrator", "Security Administrator",
+    "Compliance Administrator", "Exchange Administrator", "SharePoint Administrator", "User Administrator",
+    "Application Administrator", "Cloud Application Administrator", "Privileged Authentication Administrator"]);
+AuditLogs
+| where OperationName in~ ("Add member to role", "Add eligible member to role")
+| where Result =~ "success"
+| mv-expand Target = TargetResources
+| mv-expand Prop = Target.modifiedProperties
+| where tostring(Prop.displayName) == "Role.DisplayName"
+| extend RoleName = trim(@'"', tostring(Prop.newValue))
+| where RoleName in~ (privileged_roles)
+| extend TargetUser = tostring(Target.userPrincipalName),
+         Actor = coalesce(tostring(InitiatedBy.user.userPrincipalName), tostring(InitiatedBy.app.displayName))
+| where isnotempty(TargetUser)
+| project TimeGenerated, OperationName, RoleName, TargetUser, Actor

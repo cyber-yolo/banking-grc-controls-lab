@@ -1,0 +1,42 @@
+id: CTL-007
+name: AI agent inventory and least privilege
+domain: Non-human and AI agent identities
+type: preventive
+automation: automated
+frequency: weekly
+status: written
+owner_role: AI system owners (first line)
+reviewer_role: ICT risk management and compliance (second line)
+objective: >
+  Every AI agent or AI-enabled integration that holds an Entra identity is in
+  the AI system inventory with an owner, an AI Act role and risk class, the data
+  it can reach and its human oversight. No agent identity exists outside the
+  inventory, and no agent holds high-risk permissions.
+risks: [RSK-05, RSK-04]
+requirements: [REQ-AIA-02, REQ-AIA-05, REQ-CH-08, REQ-DORA-03, REQ-RMF-01, REQ-AIA-03, REQ-AIA-04]
+implementation:
+  platform: Microsoft Entra ID (app registrations tagged ai-agent; Entra Agent ID where available), ai-governance/ai-system-inventory.csv
+  configuration: Tag ai-agent on every agent app registration; inventory row per agent; permissions limited to the agent's documented purpose.
+  terraform: null
+evidence:
+  - {id: EV-010, item: Applications, description: App registrations with tags, owners and requested permissions}
+  - {id: EV-011, item: GraphAppRoles, description: Names of Microsoft Graph application permissions}
+  - {id: EV-012, item: AiSystemInventory, description: AI system inventory (repository file)}
+assertions:
+  - {id: CTL-007-A1, test: design, text: Every app tagged ai-agent is in the inventory and every inventory entry with an Entra identity exists}
+  - {id: CTL-007-A2, test: design, text: Every inventory entry has an owner, an AI Act role, a risk class and a human oversight description}
+  - {id: CTL-007-A3, test: design, text: No app tagged ai-agent requests a high-risk Graph application permission}
+tests:
+  design:
+    id: TC-313
+    steps:
+      - Register app-agent-kyc-summary (tag ai-agent, Mail.Read delegated only) and add its inventory row. Register app-agent-shadow (tag ai-agent) without inventory row. Run collectors and evaluator.
+    expected: A1 FAIL naming app-agent-shadow; PASS after it is inventoried or deleted
+  effectiveness:
+    id: TC-314
+    steps:
+      - Add Mail.ReadWrite application permission to app-agent-kyc-summary. Run collectors and evaluator.
+    expected: A3 FAIL; DET-013 or DET-010 raises an incident if a credential or consent is added
+detections: [DET-013, DET-010]
+limits:
+  - Microsoft Entra Agent ID and Copilot Studio agent identities were in preview at design time; whether they appear as service principals with a stable marker is TO VERIFY. The tag convention works for any app registration.

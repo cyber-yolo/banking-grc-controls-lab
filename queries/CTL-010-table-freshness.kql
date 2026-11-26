@@ -1,0 +1,6 @@
+// CTL-010 effectiveness: rows and last event per security table over 24 hours.
+// isfuzzy=true keeps the query running when a table does not exist yet;
+// a missing table then simply has no row in the result.
+union isfuzzy=true withsource = TableName SigninLogs, AuditLogs, OfficeActivity, AzureActivity, SecurityAlert
+| where TimeGenerated > ago(24h)
+| summarize rows = count(), last_event = max(TimeGenerated) by TableName

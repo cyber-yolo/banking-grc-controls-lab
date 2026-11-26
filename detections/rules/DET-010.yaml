@@ -1,0 +1,38 @@
+id: DET-010
+name: User consent to an application with mail or file permissions
+status: written
+severity: Medium
+banking_scenario: >
+  Consent phishing: a user grants a malicious application read access to the
+  mailbox or files, giving persistent access to client data without a password.
+tactics: [CredentialAccess]
+techniques: [T1528]
+attack: [T1528]
+attack_rationale: T1528 Steal Application Access Token.
+data_sources: [AuditLogs]
+query_file: DET-010.kql
+query_frequency: PT1H
+query_period: PT1H
+trigger_threshold: 0
+parameters: {}
+thresholds:
+  lab: any successful consent including a permission in the list
+  production_starting_point: same; user consent should be disabled by policy, making each event an exception
+entities:
+  - {entity_type: Account, identifier: FullName, column: Actor}
+tests:
+  positive:
+    id: TC-219
+    steps:
+      - As the lab admin, register a test application in Entra ID requesting delegated Mail.Read (no secret created).
+      - Allow user consent for the lab (revert after), then as user1 open the app consent URL and accept.
+    expected: One incident, AppName = test application, Permissions contains Mail.Read
+  negative:
+    id: TC-220
+    steps:
+      - As user1, consent to an application requesting only User.Read.
+    expected: No incident
+false_positives:
+  - Approved productivity add-ins (to allow-list by application ID)
+response: [PB-001, PB-003]
+controls: [CTL-006, CTL-011]

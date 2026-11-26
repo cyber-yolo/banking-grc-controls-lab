@@ -1,0 +1,3 @@
+id,name,entra_app_name,purpose,ai_act_role,ai_act_risk_class,owner_role,data_categories,human_oversight,log_source,status
+AI-001,KYC document summary assistant,app-agent-kyc-summary,Summarises onboarding documents for the KYC analyst,deployer,limited,KYC operations lead,client identification documents (synthetic),Analyst reviews every summary before use; no automated decision,AuditLogs;SigninLogs,planned
+AI-002,Credit scoring model (out of lab),,Illustrative entry: creditworthiness of natural persons,deployer,high,Credit risk model owner,client financial data,Credit officer decides; model output is advisory,n/a,out-of-scope

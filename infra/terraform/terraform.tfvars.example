@@ -1,0 +1,38 @@
+# Copy to terraform.tfvars (git-ignored) and fill. Never commit the copy.
+# az account show --query "{subscription:id, tenant:tenantId}" gives the two IDs.
+
+subscription_id = "<subscription-id>"
+tenant_id       = "<tenant-id>"
+
+prefix         = "bgcl"
+location       = "switzerlandnorth"
+owner          = "lab-maintainer"
+expires_on     = "YYYY-MM-DD" # day 28 of the plan
+storage_suffix = "<4-8 chars>"
+
+daily_quota_gb = 0.5
+retention_days = 90
+
+budget_amount         = 5
+budget_start_date     = "YYYY-MM-01T00:00:00Z"
+budget_contact_emails = ["soc@<lab-domain>"]
+
+internal_domain = "<lab-domain>"
+
+# CTL-013: keep var.location in the list.
+allowed_locations = ["switzerlandnorth", "switzerlandwest", "westeurope", "northeurope", "francecentral", "germanywestcentral"]
+
+# Phase 1: leave false and [] for the first apply.
+connect_entra_logs               = false
+manage_connectors_with_terraform = false
+enabled_rules                    = []
+
+# Phase 2, once tables have data:
+# enabled_rules = ["DET-002", "DET-003", "DET-004", "DET-005", "DET-006", "DET-007", "DET-008", "DET-009", "DET-010", "DET-012", "DET-013"]
+
+# CTL-001 and CTL-002 (identity.tf). Read the warning in that file first.
+manage_conditional_access = false
+conditional_access_state  = "enabledForReportingButNotEnforced"
+break_glass_object_ids    = [] # ["<bg-01-object-id>", "<bg-02-object-id>"]
+
+enable_teardown_rule = false

@@ -1,0 +1,14 @@
+{
+  "item": "KqlLegacyAuth",
+  "method": "fixture",
+  "target": "synthetic",
+  "collected_at": "2026-12-03T14:05:00Z",
+  "status": "ok",
+  "error": null,
+  "value": [
+    {
+      "attempts": 3,
+      "legacy_success": 0
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+id: CTL-016
+name: Control framework governance and reporting
+domain: Governance
+type: directive
+automation: semi-automated
+frequency: quarterly
+status: written
+owner_role: ICT risk management (second line)
+reviewer_role: Management body (lab maintainer acting)
+objective: >
+  The control framework (requirements, controls, risks, acceptances) is kept in
+  version control, reviewed at least yearly and after a major incident, and its
+  status is reported to the management body, which decides every risk
+  acceptance by name of role, date and expiry.
+risks: [RSK-07]
+requirements: [REQ-DORA-01, REQ-DORA-02, REQ-LU-05, REQ-EBA-03, REQ-LU-02]
+implementation:
+  platform: This repository (pull requests, CODEOWNERS-style review, generated dashboard)
+  configuration: Changes by pull request only; reports/compliance-dashboard.md regenerated after each evidence run; RA records in risk/acceptances/.
+  terraform: null
+evidence:
+  - {id: EV-025, item: RiskAcceptances, description: Risk acceptance records (repository files)}
+assertions:
+  - {id: CTL-016-A1, test: design, text: Every risk acceptance record has a decision date (YYYY-MM-DD) and an expiry}
+tests:
+  design:
+    id: TC-331
+    steps:
+      - Fill the decision date of RA-001 to RA-003 and run the evaluator.
+    expected: CTL-016-A1 PASS
+  effectiveness:
+    id: TC-332
+    steps:
+      - At the end of the campaign, present the dashboard and the open acceptances as a one-page management summary; record the decisions.
+    expected: Summary and decisions committed under reports/
+detections: []
+limits:
+  - One person plays every role in the lab; segregation between first line, second line and management body is simulated, not real.

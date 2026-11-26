@@ -1,0 +1,6 @@
+// DET-012 Break-glass account sign-in
+// Any sign-in attempt, successful or not, by an emergency access account.
+SigninLogs
+| where UserPrincipalName startswith "${break_glass_prefix}"
+| extend Outcome = iff(ResultType == "0", "success", strcat("failure ", ResultType))
+| project TimeGenerated, UserPrincipalName, Outcome, IPAddress, AppDisplayName, ConditionalAccessStatus

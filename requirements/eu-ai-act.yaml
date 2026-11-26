@@ -1,0 +1,43 @@
+framework: AIA
+jurisdiction: EU
+instrument: Regulation (EU) 2024/1689 laying down harmonised rules on artificial intelligence (AI Act), as amended by Regulation (EU) 2026/1744 (Digital Omnibus on AI)
+source_url: https://eur-lex.europa.eu/eli/reg/2024/1689/oj
+applies_from: "2024-08-01 (entry into force; obligations apply in stages)"
+verified_on: null
+requirements:
+  - id: REQ-AIA-01
+    reference: Art. 4
+    topic: Providers and deployers take measures to support a sufficient level of AI literacy of staff dealing with AI systems.
+    confidence: high
+    lab_scope: out
+    note: Applies since 2025-02-02. Revised by the Digital Omnibus (no specific literacy level required); people control, no technical evidence in the lab.
+  - id: REQ-AIA-02
+    reference: Art. 6(2) and Annex III point 5(b)
+    topic: AI systems used to evaluate the creditworthiness or establish the credit score of natural persons are high-risk (fraud detection excluded).
+    confidence: high
+    lab_scope: partial
+    note: The lab has no credit model. It covers the deployer-side governance a bank needs before using one (inventory, logging, oversight). Annex III obligations apply from 2027-12-02 after the Digital Omnibus (secondary sources, TO VERIFY on EUR-Lex).
+  - id: REQ-AIA-03
+    reference: Art. 12
+    topic: High-risk AI systems technically allow automatic recording of events (logs) over their lifetime.
+    confidence: high
+    lab_scope: partial
+    note: Provider obligation. Lab checks that AI interaction logs exist on the deployer side.
+  - id: REQ-AIA-04
+    reference: Art. 14
+    topic: High-risk AI systems are designed so that natural persons can effectively oversee them.
+    confidence: high
+    lab_scope: partial
+    note: Reflected as human approval before any automated containment (see sister Sentinel lab PB-003).
+  - id: REQ-AIA-05
+    reference: Art. 26
+    topic: Deployer obligations for high-risk AI systems, including use per instructions, human oversight by competent people, monitoring and keeping automatically generated logs for at least six months.
+    confidence: medium
+    lab_scope: partial
+    note: Six-month log retention is from memory (Art. 26(6)), TO VERIFY. Financial institutions have a specific provision linking monitoring to their internal governance rules; paragraph TO VERIFY.
+  - id: REQ-AIA-06
+    reference: Art. 50
+    topic: Transparency obligations, for example informing people that they are interacting with an AI system.
+    confidence: high
+    lab_scope: out
+    note: Customer-facing chatbots are not part of the lab.

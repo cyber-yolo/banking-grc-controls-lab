@@ -1,0 +1,38 @@
+id: CTL-002
+name: Legacy authentication blocked
+domain: Identity and access
+type: preventive
+automation: automated
+frequency: daily
+status: written
+owner_role: IAM engineering (first line)
+reviewer_role: ICT risk management (second line)
+objective: >
+  Protocols that cannot carry MFA (IMAP, POP, SMTP AUTH, Exchange ActiveSync
+  with basic authentication and other legacy clients) cannot be used to sign in.
+risks: [RSK-01]
+requirements: [REQ-DORA-05, REQ-RMF-02, REQ-CH-02]
+implementation:
+  platform: Microsoft Entra ID Conditional Access
+  configuration: Policy "CTL-002 Block legacy authentication", all users, client apps Exchange ActiveSync and other clients, grant Block.
+  terraform: infra/terraform/identity.tf
+evidence:
+  - {id: EV-001, item: ConditionalAccessPolicies, description: Conditional Access policies as configured}
+  - {id: EV-003, item: KqlLegacyAuth, description: Successful legacy authentication sign-ins over 7 days}
+assertions:
+  - {id: CTL-002-A1, test: design, text: An enabled policy blocks the exchangeActiveSync and other client app types for all users}
+  - {id: CTL-002-A2, test: effectiveness, text: No successful legacy authentication sign-in over 7 days}
+tests:
+  design:
+    id: TC-303
+    steps:
+      - Run the collector for EV-001 and the evaluator.
+    expected: CTL-002-A1 PASS
+  effectiveness:
+    id: TC-304
+    steps:
+      - Try an IMAP sign-in for user1 with a mail client (expected refused). Run the collector for EV-003 and the evaluator.
+    expected: Sign-in refused, CTL-002-A2 PASS, the refused attempt visible as a failure in SigninLogs
+detections: []
+limits:
+  - Microsoft has disabled basic authentication in Exchange Online for most protocols; the control remains because SMTP AUTH and future protocols may differ (TO VERIFY current state).

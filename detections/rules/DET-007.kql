@@ -1,0 +1,12 @@
+// DET-007 Mass download from SharePoint or OneDrive
+// Template variables: min_files
+OfficeActivity
+| where OfficeWorkload in ("SharePoint", "OneDrive")
+| where Operation in ("FileDownloaded", "FileSyncDownloadedFull")
+| summarize Files = dcount(OfficeObjectId),
+            SampleFiles = make_set(SourceFileName, 20),
+            Sites = make_set(Site_Url, 5),
+            FirstSeen = min(TimeGenerated),
+            LastSeen = max(TimeGenerated)
+            by UserId, ClientIP
+| where Files >= ${min_files}

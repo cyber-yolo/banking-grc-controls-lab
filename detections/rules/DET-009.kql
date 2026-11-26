@@ -1,0 +1,10 @@
+// DET-009 Logging or detection pipeline deleted in Azure
+AzureActivity
+| where OperationNameValue in~ (
+    "MICROSOFT.INSIGHTS/DIAGNOSTICSETTINGS/DELETE",
+    "MICROSOFT.SECURITYINSIGHTS/ALERTRULES/DELETE",
+    "MICROSOFT.SECURITYINSIGHTS/DATACONNECTORS/DELETE",
+    "MICROSOFT.SECURITYINSIGHTS/AUTOMATIONRULES/DELETE",
+    "MICROSOFT.OPERATIONALINSIGHTS/WORKSPACES/DELETE")
+| where ActivityStatusValue in~ ("Success", "Succeeded")
+| project TimeGenerated, Caller, CallerIpAddress, OperationNameValue, ResourceGroup, _ResourceId

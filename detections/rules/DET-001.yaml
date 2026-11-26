@@ -1,0 +1,46 @@
+id: DET-001
+name: Repeated Purview DLP alerts for the same user
+status: written
+severity: High
+banking_scenario: >
+  A staff member triggers several DLP alerts on client banking data (IBAN, AML
+  vocabulary) within a day. One alert can be a mistake; a series is a candidate
+  deliberate exfiltration (sister repo qualification code TP-SUSP).
+sister_repo_link: PV-POL-001 (banking-dlp-controls-lab), alerts from rules R2 and R3
+tactics: [Exfiltration]
+techniques: [T1048]
+attack: [T1048]
+attack_rationale: >
+  Mapped to the exfiltration tactic generically: the channel is outbound e-mail to
+  an external recipient. The mapping is approximate and reviewed after the lab run.
+data_sources: [SecurityAlert]
+query_file: DET-001.kql
+query_frequency: PT1H
+query_period: P1D
+trigger_threshold: 0
+parameters:
+  min_alerts: 3
+thresholds:
+  lab: 3 DLP alerts in 24 hours for one user
+  production_starting_point: 3 Medium or High DLP alerts in 24 hours, excluding users with an active exception (assumption)
+entities:
+  - {entity_type: Account, identifier: FullName, column: UserId}
+assumptions:
+  - "ProductName of Purview DLP alerts in SecurityAlert contains 'Data Loss Prevention' (TO CONFIRM in TC-200)."
+  - CompromisedEntity holds the sender UPN for e-mail DLP alerts (TO CONFIRM).
+tests:
+  positive:
+    id: TC-201
+    steps:
+      - Send 3 e-mails with the sister repo file SCN-001 (10 IBAN) to the external test mailbox within 1 hour.
+      - Wait for the 3 DLP alerts in Purview, then for the next rule run.
+    expected: One incident, user = sender, AlertCount = 3
+  negative:
+    id: TC-202
+    steps:
+      - Send 2 e-mails with SCN-001 within 1 hour.
+    expected: No incident from DET-001 (the DLP alerts themselves still appear)
+false_positives:
+  - Business flow with a valid exception (sister repo exception register) not yet modelled in the policy
+response: [PB-001, PB-002]
+controls: [CTL-009, CTL-011]

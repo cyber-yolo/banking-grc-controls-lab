@@ -1,0 +1,24 @@
+{
+  "item": "AccessReviewDefinitions",
+  "method": "fixture",
+  "target": "synthetic",
+  "collected_at": "2026-12-03T14:05:00Z",
+  "status": "ok",
+  "error": null,
+  "value": [
+    {
+      "displayName": "CTL-005 Quarterly review of privileged roles",
+      "scope": {
+        "query": "/roleManagement/directory/roleAssignmentScheduleInstances"
+      },
+      "settings": {
+        "recurrence": {
+          "pattern": {
+            "type": "absoluteMonthly",
+            "interval": 3
+          }
+        }
+      }
+    }
+  ]
+}

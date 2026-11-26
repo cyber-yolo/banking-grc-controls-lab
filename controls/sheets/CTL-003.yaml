@@ -1,0 +1,42 @@
+id: CTL-003
+name: Just-in-time privileged access
+domain: Privileged access
+type: preventive
+automation: automated
+frequency: daily
+status: written
+owner_role: IAM engineering (first line)
+reviewer_role: ICT risk management (second line)
+objective: >
+  Nobody holds a permanent tier-0 Entra ID role except the break-glass accounts.
+  Administrators are eligible through Privileged Identity Management and
+  activate the role for a limited time with MFA and a justification.
+risks: [RSK-02]
+requirements: [REQ-DORA-04, REQ-RMF-02, REQ-EBA-01, REQ-CH-01, REQ-NIS2-02, REQ-LU-02]
+implementation:
+  platform: Microsoft Entra ID Privileged Identity Management
+  configuration: Tier-0 roles (Global Administrator, Privileged Role Administrator, Privileged Authentication Administrator, Security Administrator) assigned as eligible; activation requires MFA and justification, maximum 4 hours.
+  terraform: null
+evidence:
+  - {id: EV-004, item: RoleDefinitions, description: Directory role definitions (names)}
+  - {id: EV-005, item: RoleAssignmentInstances, description: Active role assignments with assignment type and end date}
+  - {id: EV-006, item: RoleEligibilityInstances, description: Eligible role assignments}
+  - {id: EV-007, item: KqlPimActivations, description: PIM activations and justifications over 30 days}
+assertions:
+  - {id: CTL-003-A1, test: design, text: No permanent (assigned, no end date) tier-0 assignment except break-glass accounts}
+  - {id: CTL-003-A2, test: design, text: At least one eligible tier-0 assignment exists (JIT is in use)}
+  - {id: CTL-003-A3, test: effectiveness, text: Every PIM activation over 30 days carries a justification}
+tests:
+  design:
+    id: TC-305
+    steps:
+      - Make the lab admin eligible (not active) for Security Administrator. Run the collector for EV-004 to EV-006 and the evaluator.
+    expected: CTL-003-A1 and CTL-003-A2 PASS
+  effectiveness:
+    id: TC-306
+    steps:
+      - Activate Security Administrator twice with a justification. Run the collector for EV-007 and the evaluator.
+    expected: CTL-003-A3 PASS with 2 activations
+detections: [DET-006]
+limits:
+  - PIM role settings (MFA on activation, maximum duration) are checked manually in the portal in this version; Graph endpoint for role management policies TO VERIFY.

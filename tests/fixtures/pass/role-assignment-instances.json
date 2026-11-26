@@ -1,0 +1,34 @@
+{
+  "item": "RoleAssignmentInstances",
+  "method": "fixture",
+  "target": "synthetic",
+  "collected_at": "2026-12-03T14:05:00Z",
+  "status": "ok",
+  "error": null,
+  "value": [
+    {
+      "roleDefinitionId": "role-ga",
+      "assignmentType": "Assigned",
+      "endDateTime": null,
+      "principal": {
+        "userPrincipalName": "bg-01@contoso.example"
+      }
+    },
+    {
+      "roleDefinitionId": "role-ga",
+      "assignmentType": "Assigned",
+      "endDateTime": null,
+      "principal": {
+        "userPrincipalName": "bg-02@contoso.example"
+      }
+    },
+    {
+      "roleDefinitionId": "role-secadmin",
+      "assignmentType": "Activated",
+      "endDateTime": "2026-12-03T18:00:00Z",
+      "principal": {
+        "userPrincipalName": "admin@contoso.example"
+      }
+    }
+  ]
+}

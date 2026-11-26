@@ -1,0 +1,22 @@
+{
+  "item": "GraphAppRoles",
+  "method": "fixture",
+  "target": "synthetic",
+  "collected_at": "2026-12-03T14:05:00Z",
+  "status": "ok",
+  "error": null,
+  "value": [
+    {
+      "appRoles": [
+        {
+          "id": "perm-mail-readwrite",
+          "value": "Mail.ReadWrite"
+        },
+        {
+          "id": "perm-user-read-all",
+          "value": "User.Read.All"
+        }
+      ]
+    }
+  ]
+}

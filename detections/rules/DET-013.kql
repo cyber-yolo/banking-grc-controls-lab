@@ -1,0 +1,10 @@
+// DET-013 Credential added to an application or service principal
+// Non-human identities (apps, automation, AI agents) gaining a new secret or
+// certificate: a classic persistence path and a change that needs a ticket.
+AuditLogs
+| where OperationName has_any ("Add service principal credentials", "Certificates and secrets management")
+| where Result =~ "success"
+| mv-expand Target = TargetResources
+| extend AppName = tostring(Target.displayName),
+         Actor = coalesce(tostring(InitiatedBy.user.userPrincipalName), tostring(InitiatedBy.app.displayName))
+| project TimeGenerated, OperationName, AppName, Actor

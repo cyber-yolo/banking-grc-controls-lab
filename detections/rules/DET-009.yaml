@@ -1,0 +1,41 @@
+id: DET-009
+name: Logging or detection pipeline deleted in Azure
+status: written
+severity: High
+banking_scenario: >
+  An attacker or an insider removes the log export or the SIEM rules before
+  acting, blinding the SOC. Log integrity is also an operational resilience
+  expectation for banks (regulatory references not mapped here).
+tactics: [DefenseEvasion]
+techniques: [T1562]
+attack: [T1562.008]
+attack_rationale: T1562.008 Impair Defenses, Disable or Modify Cloud Logs.
+data_sources: [AzureActivity]
+query_file: DET-009.kql
+query_frequency: PT15M
+query_period: PT1H
+trigger_threshold: 0
+parameters: {}
+thresholds:
+  lab: any successful delete of a diagnostic setting, Sentinel rule, connector or workspace
+  production_starting_point: same, outside approved change windows
+entities:
+  - {entity_type: Account, identifier: FullName, column: Caller}
+  - {entity_type: IP, identifier: Address, column: CallerIpAddress}
+assumptions:
+  - Deletion of the Entra ID diagnostic setting is a tenant-level operation and does not appear in the subscription AzureActivity table. Not covered.
+tests:
+  positive:
+    id: TC-217
+    steps:
+      - In the portal, delete the subscription activity diagnostic setting (Terraform will recreate it at the next apply).
+    expected: One incident, OperationNameValue = MICROSOFT.INSIGHTS/DIAGNOSTICSETTINGS/DELETE
+  negative:
+    id: TC-218
+    steps:
+      - Edit the description of an analytics rule (write, not delete).
+    expected: No incident
+false_positives:
+  - Planned teardown. TC-240 uses this on purpose during Phase 5
+response: [PB-002]
+controls: [CTL-010, CTL-011]

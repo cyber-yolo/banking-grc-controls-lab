@@ -1,0 +1,31 @@
+framework: NIS2
+jurisdiction: EU
+instrument: Directive (EU) 2022/2555 on measures for a high common level of cybersecurity across the Union (NIS2)
+source_url: https://eur-lex.europa.eu/eli/dir/2022/2555/oj
+applies_from: "2024-10-18 (transposition deadline; national laws apply)"
+verified_on: null
+requirements:
+  - id: REQ-NIS2-01
+    reference: Art. 4
+    topic: Where a sector-specific Union act imposes equivalent cybersecurity requirements, those provisions apply instead of NIS2 (DORA for financial entities).
+    confidence: high
+    lab_scope: out
+    note: This is why NIS2 is a secondary mapping for banks. Kept to show the lex specialis reasoning, not as a requirement to meet.
+  - id: REQ-NIS2-02
+    reference: Art. 21(2)(i)
+    topic: Human resources security, access control policies and asset management.
+    confidence: medium
+    lab_scope: in
+    note: Cross-reference only for banks (see REQ-NIS2-01). Useful for non-financial group entities.
+  - id: REQ-NIS2-03
+    reference: Art. 21(2)(j)
+    topic: Multi-factor or continuous authentication, secured communications and emergency communication systems where appropriate.
+    confidence: medium
+    lab_scope: in
+    note: Cross-reference only for banks.
+  - id: REQ-NIS2-04
+    reference: Art. 23
+    topic: Staged reporting of significant incidents (early warning, notification, final report).
+    confidence: high
+    lab_scope: out
+    note: Superseded for banks by DORA Art. 19.

@@ -1,0 +1,36 @@
+id: CTL-012
+name: Incident classification and reporting readiness
+domain: Incident management
+type: corrective
+automation: manual
+frequency: quarterly
+status: draft
+owner_role: Incident manager (first line)
+reviewer_role: Compliance and ICT risk management (second line)
+objective: >
+  For any security incident, the team can decide within hours whether it is a
+  major ICT-related incident under DORA, a FINMA-reportable cyber attack, or a
+  personal data breach, and knows which clock starts and who reports.
+risks: [RSK-07]
+requirements: [REQ-DORA-10, REQ-DORA-11, REQ-DORA-12, REQ-CH-06, REQ-CH-13, REQ-GDPR-02, REQ-LU-06]
+implementation:
+  platform: Procedure and worksheet, Sentinel incident as input
+  configuration: incident-response/classification-worksheet.md and incident-response/reporting-clocks.md
+  terraform: null
+evidence:
+  - {id: EV-020, item: TabletopRecord, description: Tabletop exercise record (repository file)}
+assertions: []
+tests:
+  design:
+    id: TC-323
+    steps:
+      - Second-line reviewer reads the worksheet and clocks against the official texts and fills the verification table.
+    expected: Every reference verified or corrected; verified_on set
+  effectiveness:
+    id: TC-324
+    steps:
+      - Tabletop TT-001 on a DET-001 incident (repeated IBAN leaks to an external domain). Fill the worksheet, decide, time each step.
+    expected: Classification decision and the clocks that would apply recorded within 2 hours of exercise start
+detections: []
+limits:
+  - No report is ever sent to an authority. Reporting channels are named, not used.

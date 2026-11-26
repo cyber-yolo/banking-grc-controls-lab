@@ -1,0 +1,40 @@
+id: CTL-006
+name: Non-human identity hygiene
+domain: Non-human and AI agent identities
+type: preventive
+automation: automated
+frequency: daily
+status: written
+owner_role: Application owners (first line)
+reviewer_role: ICT risk management (second line)
+objective: >
+  Every application registration has an accountable owner, no client secret
+  lives longer than 180 days, and no application requests high-risk Microsoft
+  Graph application permissions without a recorded risk acceptance.
+risks: [RSK-04]
+requirements: [REQ-DORA-03, REQ-RMF-01, REQ-RMF-02, REQ-CH-01, REQ-RMF-06]
+implementation:
+  platform: Microsoft Entra ID app registrations and service principals
+  configuration: Owner set at creation, certificates or managed identities preferred, secrets limited to 180 days, high-risk permissions listed in tools/evaluate_controls.py.
+  terraform: null
+evidence:
+  - {id: EV-010, item: Applications, description: App registrations with owners, credentials and requested permissions}
+  - {id: EV-011, item: GraphAppRoles, description: Names of Microsoft Graph application permissions}
+assertions:
+  - {id: CTL-006-A1, test: design, text: Every app registration has at least one owner}
+  - {id: CTL-006-A2, test: design, text: No client secret has a lifetime above 180 days}
+  - {id: CTL-006-A3, test: design, text: No app requests a high-risk Graph application permission unless tagged with a risk acceptance (grc-ra:RA-xxx)}
+tests:
+  design:
+    id: TC-311
+    steps:
+      - Create app-grc-collector with an owner and a 30-day secret; create app-test-orphan without owner and with a 2-year secret. Run the collector for EV-010 and EV-011 and the evaluator.
+    expected: A1 and A2 FAIL on app-test-orphan only; after fixing it, PASS
+  effectiveness:
+    id: TC-312
+    steps:
+      - Run TC-225 (DET-013 positive).
+    expected: Incident raised for the new credential
+detections: [DET-010, DET-013]
+limits:
+  - Requested permissions (requiredResourceAccess) are checked, not granted ones; granted application permissions need one call per service principal (Phase 2 improvement).

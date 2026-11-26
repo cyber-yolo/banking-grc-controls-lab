@@ -1,0 +1,40 @@
+id: CTL-011
+name: Detection coverage for banking threat scenarios
+domain: Logging and detection
+type: detective
+automation: automated
+frequency: weekly
+status: written
+owner_role: Security operations (first line)
+reviewer_role: ICT risk management (second line)
+objective: >
+  Each banking threat scenario in scenarios/scenarios.yaml is covered by at
+  least one enabled analytics rule, and each enabled rule has passed its
+  positive test.
+risks: [RSK-01, RSK-02, RSK-03, RSK-04, RSK-06]
+requirements: [REQ-DORA-07, REQ-RMF-04, REQ-CH-02, REQ-EBA-01, REQ-DORA-13]
+implementation:
+  platform: Microsoft Sentinel analytics rules
+  configuration: Rules DET-001 to DET-013 deployed from detections/rules by Terraform (rules.tf).
+  terraform: infra/terraform/rules.tf
+evidence:
+  - {id: EV-018, item: SentinelAlertRules, description: Analytics rules as deployed}
+  - {id: EV-019, item: DetectionTestMatrix, description: Detection test results (repository file)}
+assertions:
+  - {id: CTL-011-A1, test: design, text: Every DET rule deployed in Sentinel has a sheet in detections/rules and is enabled}
+  - {id: CTL-011-A2, test: design, text: Every scenario has at least one deployed and enabled rule}
+  - {id: CTL-011-A3, test: effectiveness, text: Every deployed rule has a PASS on its positive test in testing/detection-test-matrix.csv}
+tests:
+  design:
+    id: TC-321
+    steps:
+      - After Phase 2, run the collector for EV-018 and the evaluator.
+    expected: CTL-011-A1 and CTL-011-A2 PASS
+  effectiveness:
+    id: TC-322
+    steps:
+      - After the detection campaign, run the evaluator.
+    expected: CTL-011-A3 PASS, or each FAIL linked to an analysis
+detections: [DET-001, DET-002, DET-003, DET-004, DET-005, DET-006, DET-007, DET-008, DET-009, DET-010, DET-011, DET-012, DET-013]
+limits:
+  - Coverage means a rule exists and fired once on a lab test. It says nothing about false negatives in production volumes.

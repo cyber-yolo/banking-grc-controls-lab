@@ -1,0 +1,40 @@
+{
+  "item": "SentinelAlertRules",
+  "method": "fixture",
+  "target": "synthetic",
+  "collected_at": "2026-12-03T14:05:00Z",
+  "status": "ok",
+  "error": null,
+  "value": [
+    {
+      "properties": {
+        "displayName": "DET-001 rule",
+        "enabled": true
+      }
+    },
+    {
+      "properties": {
+        "displayName": "DET-003 rule",
+        "enabled": true
+      }
+    },
+    {
+      "properties": {
+        "displayName": "DET-006 rule",
+        "enabled": true
+      }
+    },
+    {
+      "properties": {
+        "displayName": "DET-007 rule",
+        "enabled": true
+      }
+    },
+    {
+      "properties": {
+        "displayName": "DET-010 rule",
+        "enabled": true
+      }
+    }
+  ]
+}

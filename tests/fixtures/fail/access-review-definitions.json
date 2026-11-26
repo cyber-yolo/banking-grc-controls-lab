@@ -1,0 +1,31 @@
+{
+  "item": "AccessReviewDefinitions",
+  "method": "fixture",
+  "target": "synthetic",
+  "collected_at": "2026-12-03T14:05:00Z",
+  "status": "ok",
+  "error": null,
+  "value": [
+    {
+      "displayName": "CTL-005 Quarterly review of privileged roles",
+      "scope": {
+        "query": "/groups/members"
+      },
+      "settings": {
+        "recurrence": {
+          "pattern": {
+            "type": "absoluteMonthly",
+            "interval": 12
+          }
+        }
+      }
+    },
+    {
+      "displayName": "Guest review",
+      "scope": {
+        "query": "/users"
+      },
+      "settings": {}
+    }
+  ]
+}

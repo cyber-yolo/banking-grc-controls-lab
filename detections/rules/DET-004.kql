@@ -1,0 +1,12 @@
+// DET-004 Password spray from one IP address
+// Template variables: min_users, min_attempts
+// 50126 = invalid username or password; 50053 = account locked or malicious IP
+SigninLogs
+| where ResultType in ("50126", "50053")
+| summarize TargetedUsers = dcount(UserPrincipalName),
+            Attempts = count(),
+            Users = make_set(UserPrincipalName, 25),
+            FirstSeen = min(TimeGenerated),
+            LastSeen = max(TimeGenerated)
+            by IPAddress
+| where TargetedUsers >= ${min_users} and Attempts >= ${min_attempts}

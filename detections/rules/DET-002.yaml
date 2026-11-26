@@ -1,0 +1,42 @@
+id: DET-002
+name: Mailbox forwarding to an external domain
+status: written
+severity: Medium
+banking_scenario: >
+  A compromised or malicious mailbox silently forwards client correspondence
+  (payment confirmations, KYC documents) outside the bank. Classic business e-mail
+  compromise preparation and a banking secrecy breach on its own.
+tactics: [Collection]
+techniques: [T1114]
+attack: [T1114.003]
+attack_rationale: T1114.003 Email Collection, Email Forwarding Rule.
+data_sources: [OfficeActivity]
+query_file: DET-002.kql
+query_frequency: PT1H
+query_period: PT6H
+trigger_threshold: 0
+parameters: {}
+thresholds:
+  lab: any forwarding to a domain other than the lab domain
+  production_starting_point: same, with an allow-list of approved partner domains
+assumptions:
+  - Rules created in Outlook on the web log as New-InboxRule or Set-InboxRule with a Parameters array. Outlook desktop logs UpdateInboxRules with details elsewhere; not covered, tests use Outlook on the web.
+entities:
+  - {entity_type: Account, identifier: FullName, column: UserId}
+  - {entity_type: IP, identifier: Address, column: ClientIP}
+tests:
+  positive:
+    id: TC-203
+    steps:
+      - As user1, in Outlook on the web, create an inbox rule "forward to" the external test mailbox.
+      - Record the UTC time; wait for OfficeActivity ingestion.
+    expected: One incident, UserId = user1, DestinationDomain = external test domain
+  negative:
+    id: TC-204
+    steps:
+      - As user1, create an inbox rule forwarding to user2 (internal).
+    expected: No incident
+false_positives:
+  - Assistant forwarding to an approved external service (to allow-list)
+response: [PB-001, PB-003]
+controls: [CTL-009, CTL-011]

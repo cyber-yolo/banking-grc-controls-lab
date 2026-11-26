@@ -1,0 +1,18 @@
+{
+  "item": "PolicyAssignments",
+  "method": "fixture",
+  "target": "synthetic",
+  "collected_at": "2026-12-03T14:05:00Z",
+  "status": "ok",
+  "error": null,
+  "value": [
+    {
+      "displayName": "CTL-013 Allowed locations",
+      "enforcementMode": "Default"
+    },
+    {
+      "displayName": "CTL-013 Allowed locations for resource groups",
+      "enforcementMode": "Default"
+    }
+  ]
+}

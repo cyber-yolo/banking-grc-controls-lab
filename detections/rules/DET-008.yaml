@@ -1,0 +1,40 @@
+id: DET-008
+name: Anonymous or guest sharing link on a sensitive site
+status: written
+severity: Medium
+banking_scenario: >
+  A client document library is shared with "anyone with the link" or with a
+  personal guest account, putting client data outside the bank's control.
+tactics: [Exfiltration]
+techniques: [T1537]
+attack: [T1537]
+attack_rationale: T1537 Transfer Data to Cloud Account (sharing to an account outside the organisation).
+data_sources: [OfficeActivity]
+query_file: DET-008.kql
+query_frequency: PT1H
+query_period: PT1H
+trigger_threshold: 0
+parameters:
+  sensitive_site_keyword: client
+thresholds:
+  lab: any anonymous link or guest invitation on a site whose URL contains the keyword
+  production_starting_point: sites labelled Confidential or above (sensitivity label), not a URL keyword
+entities:
+  - {entity_type: Account, identifier: FullName, column: UserId}
+  - {entity_type: IP, identifier: Address, column: ClientIP}
+tests:
+  positive:
+    id: TC-215
+    steps:
+      - Allow anonymous links at tenant and site level for the lab site "Client Portfolio" (lab only, revert after).
+      - As user1, create an "Anyone with the link" link on one synthetic file.
+    expected: One incident, Operation = AnonymousLinkCreated
+  negative:
+    id: TC-216
+    steps:
+      - As user1, share a file of a site without the keyword ("Team Events") with user2.
+    expected: No incident
+false_positives:
+  - Approved external data room (to allow-list by site)
+response: [PB-001, PB-002]
+controls: [CTL-009, CTL-011]

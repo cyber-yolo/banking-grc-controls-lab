@@ -1,0 +1,40 @@
+id: CTL-001
+name: Multi-factor authentication for all users
+domain: Identity and access
+type: preventive
+automation: automated
+frequency: daily
+status: written
+owner_role: IAM engineering (first line)
+reviewer_role: ICT risk management (second line)
+objective: >
+  Every interactive sign-in of a staff account to any cloud application is
+  protected by multi-factor authentication. Only the two emergency access
+  accounts (CTL-004) are excluded.
+risks: [RSK-01, RSK-03]
+requirements: [REQ-DORA-05, REQ-RMF-02, REQ-NIS2-03, REQ-EBA-01, REQ-CH-01, REQ-CH-02, REQ-GDPR-01, REQ-CH-10, REQ-LU-02]
+implementation:
+  platform: Microsoft Entra ID Conditional Access
+  configuration: Policy "CTL-001 Require MFA for all users", all users, all cloud apps, grant MFA, break-glass accounts excluded.
+  terraform: infra/terraform/identity.tf
+evidence:
+  - {id: EV-001, item: ConditionalAccessPolicies, description: Conditional Access policies as configured}
+  - {id: EV-002, item: KqlMfaCoverage, description: Share of successful interactive sign-ins with MFA over 7 days}
+assertions:
+  - {id: CTL-001-A1, test: design, text: An enabled policy requires MFA (or an authentication strength) for all users and all applications}
+  - {id: CTL-001-A2, test: design, text: That policy excludes no group and at most the two break-glass accounts}
+  - {id: CTL-001-A3, test: effectiveness, text: At least 99 % of successful interactive sign-ins (break-glass excluded) satisfied MFA over 7 days}
+tests:
+  design:
+    id: TC-301
+    steps:
+      - Run the collector for EV-001 and the evaluator.
+    expected: CTL-001-A1 and CTL-001-A2 PASS
+  effectiveness:
+    id: TC-302
+    steps:
+      - Sign in as user1 and user2 on three different days, run the collector for EV-002 and the evaluator.
+    expected: CTL-001-A3 PASS, sample size recorded
+detections: [DET-004, DET-005, DET-011]
+limits:
+  - Lab MFA uses the Authenticator app, not phishing-resistant methods. Accepted in RA-002.

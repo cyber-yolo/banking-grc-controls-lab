@@ -1,0 +1,40 @@
+id: DET-012
+name: Break-glass account sign-in
+status: written
+severity: High
+banking_scenario: >
+  Emergency access accounts bypass Conditional Access by design. In a bank they
+  are used only during a declared outage, under dual control. Any sign-in is an
+  event the second line reviews, and an unplanned one is an incident.
+tactics: [InitialAccess, PrivilegeEscalation]
+techniques: [T1078]
+attack: [T1078.004]
+attack_rationale: T1078.004 Valid Accounts, Cloud Accounts. The account is legitimate, its use is the signal.
+data_sources: [SigninLogs]
+query_file: DET-012.kql
+query_frequency: PT5M
+query_period: PT5M
+trigger_threshold: 0
+parameters:
+  break_glass_prefix: "bg-"
+thresholds:
+  lab: any sign-in attempt
+  production_starting_point: same; near-real-time rule type is an option (TO VERIFY support in Terraform)
+entities:
+  - {entity_type: Account, identifier: FullName, column: UserPrincipalName}
+  - {entity_type: IP, identifier: Address, column: IPAddress}
+tests:
+  positive:
+    id: TC-223
+    steps:
+      - Sign in once with the break-glass account bg-01 to the Azure portal. Record the time and the reason in the run sheet (planned test).
+    expected: One incident, UserPrincipalName starts with bg-
+  negative:
+    id: TC-224
+    steps:
+      - Sign in with user1.
+    expected: No incident
+false_positives:
+  - Planned break-glass test (quarterly in production, recorded beforehand)
+response: [PB-002]
+controls: [CTL-004, CTL-011]

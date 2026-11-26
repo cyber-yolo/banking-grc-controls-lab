@@ -1,0 +1,14 @@
+id,name,severity,tactics,attack,data_sources,positive_test,negative_test,status
+DET-001,Repeated Purview DLP alerts for the same user,High,Exfiltration,T1048,SecurityAlert,TC-201,TC-202,written
+DET-002,Mailbox forwarding to an external domain,Medium,Collection,T1114.003,OfficeActivity,TC-203,TC-204,written
+DET-003,Inbox rule hiding payment or fraud related e-mails,High,DefenseEvasion,T1564.008,OfficeActivity,TC-205,TC-206,written
+DET-004,Password spray from one IP address,Medium,CredentialAccess,T1110.003,SigninLogs,TC-207,TC-208,written
+DET-005,Successful sign-in after repeated failures,High,CredentialAccess;InitialAccess,T1110.001;T1078.004,SigninLogs,TC-209,TC-210,written
+DET-006,Privileged Entra ID role assigned,High,Persistence;PrivilegeEscalation,T1098.003,AuditLogs,TC-211,TC-212,written
+DET-007,Mass download from SharePoint or OneDrive,Medium,Collection,T1530;T1213.002,OfficeActivity,TC-213,TC-214,written
+DET-008,Anonymous or guest sharing link on a sensitive site,Medium,Exfiltration,T1537,OfficeActivity,TC-215,TC-216,written
+DET-009,Logging or detection pipeline deleted in Azure,High,DefenseEvasion,T1562.008,AzureActivity,TC-217,TC-218,written
+DET-010,User consent to an application with mail or file permissions,Medium,CredentialAccess,T1528,AuditLogs,TC-219,TC-220,written
+DET-011,Repeated MFA denials or timeouts for one user,Medium,CredentialAccess,T1621,SigninLogs,TC-221,TC-222,written
+DET-012,Break-glass account sign-in,High,InitialAccess;PrivilegeEscalation,T1078.004,SigninLogs,TC-223,TC-224,written
+DET-013,Credential added to an application or service principal,Medium,Persistence,T1098.001,AuditLogs,TC-225,TC-226,written

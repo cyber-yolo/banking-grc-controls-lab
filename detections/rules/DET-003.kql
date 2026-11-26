@@ -1,0 +1,15 @@
+// DET-003 Inbox rule hiding payment or fraud related e-mails
+let finance_terms = dynamic(["virement", "paiement", "payment", "wire", "transfer", "iban", "swift", "fraud", "fraude", "invoice", "facture", "urgent"]);
+let hiding_folders = dynamic(["RSS", "Archive", "Conversation History", "Junk"]);
+OfficeActivity
+| where OfficeWorkload == "Exchange"
+| where Operation in~ ("New-InboxRule", "Set-InboxRule")
+| mv-apply p = todynamic(Parameters) on (
+    summarize Params = make_bag(bag_pack(tostring(p.Name), tostring(p.Value)))
+  )
+| extend Keywords = strcat(tostring(Params.SubjectContainsWords), " ", tostring(Params.SubjectOrBodyContainsWords), " ", tostring(Params.BodyContainsWords), " ", tostring(Params.FromAddressContainsWords))
+| extend Hides = tostring(Params.DeleteMessage) =~ "True"
+             or tostring(Params.MarkAsRead) =~ "True"
+             or tostring(Params.MoveToFolder) has_any (hiding_folders)
+| where Hides and Keywords has_any (finance_terms)
+| project TimeGenerated, UserId, Operation, RuleName = tostring(Params.Name), Keywords, MoveToFolder = tostring(Params.MoveToFolder), ClientIP

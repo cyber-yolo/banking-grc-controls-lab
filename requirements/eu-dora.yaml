@@ -1,0 +1,92 @@
+framework: DORA
+jurisdiction: EU
+instrument: Regulation (EU) 2022/2554 on digital operational resilience for the financial sector (DORA)
+source_url: https://eur-lex.europa.eu/eli/reg/2022/2554/oj
+applies_from: "2025-01-17"
+verified_on: null
+requirements:
+  - id: REQ-DORA-01
+    reference: Art. 5
+    topic: Management body defines, approves, oversees and is accountable for the ICT risk management framework.
+    confidence: high
+    lab_scope: partial
+    note: Lab shows the evidence pack a management body would review (dashboard, risk acceptances), not board governance itself.
+  - id: REQ-DORA-02
+    reference: Art. 6
+    topic: Documented ICT risk management framework, reviewed at least yearly and after major incidents, with an independent audit function.
+    confidence: high
+    lab_scope: partial
+    note: The repository itself is the documented framework for the lab scope. Internal audit independence is out of scope.
+  - id: REQ-DORA-03
+    reference: Art. 8
+    topic: Identify, classify and document ICT-supported business functions, information assets and ICT assets, including dependencies and accounts.
+    confidence: high
+    lab_scope: partial
+    note: Covered for identities, including non-human and AI agent identities. No full CMDB.
+  - id: REQ-DORA-04
+    reference: Art. 9(4)(c)
+    topic: Limit logical access to information and ICT assets to what is required for approved functions (least privilege).
+    confidence: medium
+    lab_scope: in
+  - id: REQ-DORA-05
+    reference: Art. 9(4)(d)
+    topic: Strong authentication mechanisms, based on relevant standards, and dedicated controls to protect cryptographic keys.
+    confidence: medium
+    lab_scope: in
+  - id: REQ-DORA-06
+    reference: Art. 9(2) and 9(3)
+    topic: Protect the confidentiality, integrity and availability of data at rest, in use and in transit, and prevent data leakage.
+    confidence: medium
+    lab_scope: partial
+    note: Data leakage via e-mail and AI assistants only (Purview DLP).
+  - id: REQ-DORA-07
+    reference: Art. 10
+    topic: Mechanisms to promptly detect anomalous activities, including network performance issues and ICT-related incidents.
+    confidence: high
+    lab_scope: in
+  - id: REQ-DORA-08
+    reference: Art. 11
+    topic: ICT business continuity policy with response and recovery plans.
+    confidence: high
+    lab_scope: out
+    note: No recovery infrastructure in a single-tenant lab. Listed so the gap is visible.
+  - id: REQ-DORA-09
+    reference: Art. 13(6)
+    topic: ICT security awareness programmes and digital operational resilience training for all staff and for the management body.
+    confidence: medium
+    lab_scope: out
+    note: People control, no technical evidence produced by the lab.
+  - id: REQ-DORA-10
+    reference: Art. 17
+    topic: ICT-related incident management process to detect, manage, record and notify incidents, with roles and escalation.
+    confidence: high
+    lab_scope: in
+  - id: REQ-DORA-11
+    reference: Art. 18
+    topic: Classify ICT-related incidents and cyber threats using the criteria set by the RTS (Delegated Regulation (EU) 2024/1772).
+    confidence: high
+    lab_scope: in
+  - id: REQ-DORA-12
+    reference: Art. 19
+    topic: Report major ICT-related incidents to the competent authority (initial notification, intermediate and final reports).
+    confidence: high
+    lab_scope: partial
+    note: Readiness only (templates, timers, tabletop). No report is ever sent to an authority. Content and time limits are in Delegated Regulation (EU) 2025/301 and templates in Implementing Regulation (EU) 2025/302 (numbers TO VERIFY).
+  - id: REQ-DORA-13
+    reference: Art. 24 and 25
+    topic: Digital operational resilience testing programme, proportionate and risk-based, including vulnerability assessments and scenario-based tests.
+    confidence: high
+    lab_scope: partial
+    note: The control test cases TC-3xx are a small-scale testing programme. No TLPT (Art. 26).
+  - id: REQ-DORA-14
+    reference: Art. 28(3)
+    topic: Maintain and update a register of information on all contractual arrangements with ICT third-party service providers.
+    confidence: high
+    lab_scope: in
+    note: Register format set by Implementing Regulation (EU) 2024/2956 (number TO VERIFY). Lab uses a reduced field set.
+  - id: REQ-DORA-15
+    reference: Art. 30
+    topic: Key contractual provisions for ICT services, with additional ones for services supporting critical or important functions.
+    confidence: high
+    lab_scope: out
+    note: No negotiated contract in a lab; Microsoft standard terms only.

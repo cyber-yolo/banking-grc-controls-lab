@@ -1,0 +1,41 @@
+id: DET-003
+name: Inbox rule hiding payment or fraud related e-mails
+status: written
+severity: High
+banking_scenario: >
+  Payment fraud by business e-mail compromise: the attacker hides replies about
+  wire transfers, IBAN changes or fraud alerts so that the victim does not see
+  the bank or the client questioning a payment.
+tactics: [DefenseEvasion]
+techniques: [T1564]
+attack: [T1564.008]
+attack_rationale: T1564.008 Hide Artifacts, Email Hiding Rules.
+data_sources: [OfficeActivity]
+query_file: DET-003.kql
+query_frequency: PT1H
+query_period: PT6H
+trigger_threshold: 0
+parameters: {}
+thresholds:
+  lab: rule deletes, marks as read or moves to RSS/Archive/Conversation History AND matches a finance keyword
+  production_starting_point: same; keyword list owned by the fraud team
+assumptions:
+  - Rules created in Outlook on the web log as New-InboxRule or Set-InboxRule with a Parameters array. Outlook desktop logs UpdateInboxRules with details elsewhere; not covered, tests use Outlook on the web.
+entities:
+  - {entity_type: Account, identifier: FullName, column: UserId}
+  - {entity_type: IP, identifier: Address, column: ClientIP}
+tests:
+  positive:
+    id: TC-205
+    steps:
+      - As user2, create an inbox rule "subject contains virement" with action "move to RSS Feeds".
+    expected: One incident, Keywords contains virement
+  negative:
+    id: TC-206
+    steps:
+      - As user2, create an inbox rule "subject contains newsletter" moving to a folder "Newsletters".
+    expected: No incident
+false_positives:
+  - Finance staff filing payment notifications automatically into an archive folder
+response: [PB-001, PB-003]
+controls: [CTL-011]

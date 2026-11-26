@@ -1,0 +1,5 @@
+id,provider,service,ict_service_type,supports_critical_function,data_location,data_categories,contract_reference,subcontractors_known,substitutability,exit_plan_ref,last_assessment,status
+TP-001,Microsoft,Microsoft 365 E5 (trial),SaaS: e-mail and collaboration,yes,EU or CH data location set at tenant creation (record value),staff and synthetic client data,Microsoft standard online terms,no,medium,third-parties/exit-plans/TP-001.md,2026-11-26,active
+TP-002,Microsoft,Microsoft Entra ID,SaaS: identity provider,yes,Per tenant data location (record value),identities and logs,Microsoft standard online terms,no,low,third-parties/exit-plans/TP-002.md,2026-11-26,active
+TP-003,Microsoft,Azure (Log Analytics; Sentinel; Storage; Policy),IaaS and PaaS: logging and security monitoring,yes,switzerlandnorth (Terraform variable),security logs and evidence,Microsoft standard online terms,no,medium,third-parties/exit-plans/TP-003.md,2026-11-26,active
+TP-004,GitHub,GitHub repository and Actions,SaaS: source control and CI,no,United States (provider default),code and documentation only (no client data),GitHub standard terms,no,high,,2026-11-26,active

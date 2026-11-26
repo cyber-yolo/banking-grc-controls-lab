@@ -1,0 +1,14 @@
+{
+  "item": "KqlPimActivations",
+  "method": "fixture",
+  "target": "synthetic",
+  "collected_at": "2026-12-03T14:05:00Z",
+  "status": "ok",
+  "error": null,
+  "value": [
+    {
+      "activations": 2,
+      "without_justification": 1
+    }
+  ]
+}

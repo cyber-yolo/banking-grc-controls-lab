@@ -1,0 +1,39 @@
+id: CTL-004
+name: Emergency access accounts
+domain: Privileged access
+type: corrective
+automation: automated
+frequency: daily
+status: written
+owner_role: IAM engineering (first line)
+reviewer_role: ICT risk management (second line)
+objective: >
+  Exactly two emergency access (break-glass) accounts exist, are enabled, are
+  excluded from every Conditional Access policy so that a policy mistake cannot
+  lock the bank out, and every use raises an alert.
+risks: [RSK-02, RSK-06]
+requirements: [REQ-RMF-02, REQ-DORA-04]
+implementation:
+  platform: Microsoft Entra ID, Microsoft Sentinel
+  configuration: Accounts named bg-01 and bg-02, cloud-only, long random passwords stored offline (lab) or FIDO2 keys (production), Global Administrator permanent, alert DET-012.
+  terraform: null
+evidence:
+  - {id: EV-001, item: ConditionalAccessPolicies, description: Conditional Access policies as configured}
+  - {id: EV-008, item: BreakGlassUsers, description: Accounts whose name starts with bg-}
+assertions:
+  - {id: CTL-004-A1, test: design, text: Exactly two enabled break-glass accounts exist}
+  - {id: CTL-004-A2, test: design, text: Every enabled or report-only Conditional Access policy excludes both break-glass accounts}
+tests:
+  design:
+    id: TC-307
+    steps:
+      - Run the collector for EV-001 and EV-008 and the evaluator.
+    expected: CTL-004-A1 and CTL-004-A2 PASS
+  effectiveness:
+    id: TC-308
+    steps:
+      - Run TC-223 (DET-012 positive) and check the incident reached the SOC mailbox through PB-002.
+    expected: Incident within 15 minutes of the sign-in
+detections: [DET-012]
+limits:
+  - Credentials of lab break-glass accounts are never written in the repository or in project notes.

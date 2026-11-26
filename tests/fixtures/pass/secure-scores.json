@@ -1,0 +1,19 @@
+{
+  "item": "SecureScores",
+  "method": "fixture",
+  "target": "synthetic",
+  "collected_at": "2026-12-03T14:05:00Z",
+  "status": "ok",
+  "error": null,
+  "value": [
+    {
+      "properties": {
+        "score": {
+          "current": 8.1,
+          "max": 10,
+          "percentage": 0.81
+        }
+      }
+    }
+  ]
+}

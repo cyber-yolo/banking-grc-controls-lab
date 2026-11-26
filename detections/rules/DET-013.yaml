@@ -1,0 +1,42 @@
+id: DET-013
+name: Credential added to an application or service principal
+status: written
+severity: Medium
+banking_scenario: >
+  An attacker or an insider adds a client secret to an existing application,
+  for example an AI agent or an integration with mail access, and then uses it
+  from outside without MFA. Non-human identities are rarely reviewed; DORA and
+  FINMA expect them in the identity inventory like any account.
+tactics: [Persistence]
+techniques: [T1098]
+attack: [T1098.001]
+attack_rationale: T1098.001 Account Manipulation, Additional Cloud Credentials.
+data_sources: [AuditLogs]
+query_file: DET-013.kql
+query_frequency: PT1H
+query_period: PT1H
+trigger_threshold: 0
+parameters: {}
+thresholds:
+  lab: any credential added
+  production_starting_point: suppressed when the actor is the CI/CD identity and a change ticket exists (not modelled)
+assumptions:
+  - Operation names observed in AuditLogs at design time from public documentation; to confirm with TC-225 (the application operation name contains a dash and a trailing space, hence has_any)
+entities:
+  - {entity_type: Account, identifier: FullName, column: Actor}
+  - {entity_type: CloudApplication, identifier: Name, column: AppName}
+tests:
+  positive:
+    id: TC-225
+    steps:
+      - As the lab admin, add a client secret (expiry 1 day) to the lab application app-grc-collector. Record the time. Delete the secret after the test.
+    expected: One incident, AppName = app-grc-collector
+  negative:
+    id: TC-226
+    steps:
+      - Change the display name of the same application.
+    expected: No incident
+false_positives:
+  - Planned secret rotation (production: tie to change tickets)
+response: [PB-001]
+controls: [CTL-006, CTL-007, CTL-011]

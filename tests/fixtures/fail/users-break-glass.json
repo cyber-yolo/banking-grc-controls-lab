@@ -1,0 +1,25 @@
+{
+  "item": "BreakGlassUsers",
+  "method": "fixture",
+  "target": "synthetic",
+  "collected_at": "2026-12-03T14:05:00Z",
+  "status": "ok",
+  "error": null,
+  "value": [
+    {
+      "id": "user-bg-01",
+      "userPrincipalName": "bg-01@contoso.example",
+      "accountEnabled": true
+    },
+    {
+      "id": "user-bg-02",
+      "userPrincipalName": "bg-02@contoso.example",
+      "accountEnabled": true
+    },
+    {
+      "id": "user-bg-03",
+      "userPrincipalName": "bg-03@contoso.example",
+      "accountEnabled": false
+    }
+  ]
+}

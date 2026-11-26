@@ -1,0 +1,20 @@
+{
+  "item": "PolicyComplianceSummary",
+  "method": "fixture",
+  "target": "synthetic",
+  "collected_at": "2026-12-03T14:05:00Z",
+  "status": "ok",
+  "error": null,
+  "value": [
+    {
+      "policyAssignments": [
+        {
+          "policyAssignmentId": "<scope>/providers/microsoft.authorization/policyassignments/ctl-013-allowed-locations",
+          "results": {
+            "nonCompliantResources": 0
+          }
+        }
+      ]
+    }
+  ]
+}

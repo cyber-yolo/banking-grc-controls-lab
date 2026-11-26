@@ -1,0 +1,14 @@
+// DET-010 User consent to an application with mail or file permissions
+let sensitive_permissions = dynamic(["Mail.Read", "Mail.ReadWrite", "Mail.Send", "MailboxSettings.ReadWrite",
+    "Files.Read.All", "Files.ReadWrite.All", "Sites.Read.All", "Sites.ReadWrite.All", "full_access_as_user"]);
+AuditLogs
+| where OperationName =~ "Consent to application"
+| where Result =~ "success"
+| mv-expand Target = TargetResources
+| extend AppName = tostring(Target.displayName)
+| mv-expand Prop = Target.modifiedProperties
+| where tostring(Prop.displayName) =~ "ConsentAction.Permissions"
+| extend Permissions = tostring(Prop.newValue)
+| where Permissions has_any (sensitive_permissions)
+| extend Actor = tostring(InitiatedBy.user.userPrincipalName)
+| project TimeGenerated, Actor, AppName, Permissions

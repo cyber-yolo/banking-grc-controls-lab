@@ -1,0 +1,11 @@
+id,title,scenario,inherent_likelihood,inherent_impact,controls,residual_rating,owner_role,status,acceptance
+RSK-01,Staff account takeover by credential attack,SCN-G04,High,High,CTL-001;CTL-002;CTL-011,Medium,IAM engineering,open,
+RSK-02,Misuse or escalation of privileged access,SCN-G03,Medium,High,CTL-003;CTL-004;CTL-005;CTL-011,Medium,IAM engineering,open,
+RSK-03,Client data exfiltration by an insider or compromised account,SCN-G01;SCN-G02,High,High,CTL-009;CTL-008;CTL-001;CTL-011,Medium,Data protection engineering,open,RA-003
+RSK-04,Abuse of a non-human identity (app or automation credential),SCN-G05,Medium,High,CTL-006;CTL-007;CTL-011,Medium,Application owners,open,
+RSK-05,AI agent acting outside its mandate or leaking client data,SCN-G05,Medium,High,CTL-007;CTL-008,High,AI system owners,open,RA-003
+RSK-06,Loss of security visibility (logging disabled or not retained),SCN-G03,Low,High,CTL-010;CTL-004;CTL-011,Low,Security operations,open,RA-001
+RSK-07,Late or wrong regulatory incident notification,SCN-G01,Medium,High,CTL-012,Medium,Incident manager,open,
+RSK-08,Client data stored outside approved jurisdictions,SCN-G02,Low,High,CTL-013,Low,Cloud platform engineering,open,
+RSK-09,Unmanaged ICT third-party dependency or concentration,n/a,Medium,Medium,CTL-014,Medium,Vendor management,open,
+RSK-10,Insecure cloud configuration,n/a,Medium,Medium,CTL-015,Medium,Cloud platform engineering,open,

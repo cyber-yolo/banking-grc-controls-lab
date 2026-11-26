@@ -1,0 +1,14 @@
+// DET-005 Successful sign-in after repeated failures
+// Template variables: min_failures, success_window_minutes
+let failures = SigninLogs
+    | where ResultType == "50126"
+    | summarize FailCount = count(), FailStart = min(TimeGenerated), FailEnd = max(TimeGenerated)
+                by UserPrincipalName, IPAddress
+    | where FailCount >= ${min_failures};
+SigninLogs
+| where ResultType == "0"
+| project SuccessTime = TimeGenerated, UserPrincipalName, IPAddress, AppDisplayName, Location
+| join kind=inner failures on UserPrincipalName, IPAddress
+| where SuccessTime between (FailEnd .. FailEnd + ${success_window_minutes}m)
+| summarize SuccessTime = min(SuccessTime), FailCount = max(FailCount), Apps = make_set(AppDisplayName, 5)
+            by UserPrincipalName, IPAddress

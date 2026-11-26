@@ -1,0 +1,13 @@
+// DET-001 Repeated Purview DLP alerts for the same user
+// Template variables (Terraform templatefile): min_alerts
+SecurityAlert
+| where ProductName has "Data Loss Prevention" or ProviderName has "Data Loss Prevention"
+| extend UserId = tolower(CompromisedEntity)
+| where isnotempty(UserId)
+| summarize AlertCount = count(),
+            AlertNames = make_set(AlertName, 10),
+            Severities = make_set(AlertSeverity, 5),
+            FirstSeen = min(TimeGenerated),
+            LastSeen = max(TimeGenerated)
+            by UserId
+| where AlertCount >= ${min_alerts}

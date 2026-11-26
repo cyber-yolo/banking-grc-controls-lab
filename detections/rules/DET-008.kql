@@ -1,0 +1,8 @@
+// DET-008 Anonymous or guest sharing link on a sensitive site
+// Template variables: sensitive_site_keyword
+OfficeActivity
+| where OfficeWorkload in ("SharePoint", "OneDrive")
+| where Operation in ("AnonymousLinkCreated", "SharingInvitationCreated", "AddedToSecureLink")
+| where Operation == "AnonymousLinkCreated" or TargetUserOrGroupType =~ "Guest"
+| where Site_Url has "${sensitive_site_keyword}" or OfficeObjectId has "${sensitive_site_keyword}"
+| project TimeGenerated, UserId, Operation, OfficeObjectId, TargetUserOrGroupName, TargetUserOrGroupType, ClientIP

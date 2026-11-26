@@ -1,0 +1,37 @@
+id: CTL-015
+name: Cloud security posture baseline
+domain: Cloud posture
+type: detective
+automation: automated
+frequency: weekly
+status: written
+owner_role: Cloud platform engineering (first line)
+reviewer_role: ICT risk management (second line)
+objective: >
+  The lab subscription is assessed against the Microsoft cloud security
+  benchmark by Defender for Cloud (free foundational posture management) and
+  keeps a secure score at or above the lab target.
+risks: [RSK-10]
+requirements: [REQ-RMF-05, REQ-DORA-04, REQ-CH-02]
+implementation:
+  platform: Microsoft Defender for Cloud (foundational CSPM, free)
+  configuration: Default Microsoft cloud security benchmark initiative; no paid plan enabled.
+  terraform: null
+evidence:
+  - {id: EV-024, item: SecureScores, description: Secure score of the subscription}
+assertions:
+  - {id: CTL-015-A1, test: design, text: Secure score is at least 70 % of the maximum}
+tests:
+  design:
+    id: TC-329
+    steps:
+      - Two days after apply, run the collector for EV-024 and the evaluator.
+    expected: CTL-015-A1 PASS or each failing recommendation listed with a decision (fix or risk acceptance)
+  effectiveness:
+    id: TC-330
+    steps:
+      - Enable public blob access on a test storage account, wait for reassessment, collect and evaluate; then revert.
+    expected: Score drops and the recommendation appears; returns after revert
+detections: []
+limits:
+  - The 70 % target is a lab choice, not a regulatory threshold.

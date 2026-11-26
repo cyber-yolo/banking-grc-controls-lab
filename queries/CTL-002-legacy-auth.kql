@@ -1,0 +1,8 @@
+// CTL-002 effectiveness: successful sign-ins through legacy authentication clients.
+let legacy_clients = dynamic(["Authenticated SMTP", "AutoDiscover", "Exchange ActiveSync", "Exchange Online PowerShell",
+    "Exchange Web Services", "IMAP4", "MAPI Over HTTP", "Offline Address Book", "Other clients",
+    "Outlook Anywhere (RPC over HTTP)", "POP3", "Reporting Web Services", "Universal Outlook"]);
+SigninLogs
+| where TimeGenerated > ago(7d)
+| where ClientAppUsed in (legacy_clients)
+| summarize attempts = count(), legacy_success = countif(ResultType == "0")

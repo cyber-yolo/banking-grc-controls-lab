@@ -1,0 +1,100 @@
+{
+  "item": "Applications",
+  "method": "fixture",
+  "target": "synthetic",
+  "collected_at": "2026-12-03T14:05:00Z",
+  "status": "ok",
+  "error": null,
+  "value": [
+    {
+      "displayName": "app-grc-collector",
+      "tags": [],
+      "owners": [
+        {
+          "id": "owner-1"
+        }
+      ],
+      "passwordCredentials": [
+        {
+          "startDateTime": "2026-12-01T00:00:00Z",
+          "endDateTime": "2026-12-31T00:00:00Z"
+        }
+      ],
+      "keyCredentials": [],
+      "requiredResourceAccess": [
+        {
+          "resourceAppId": "00000003-0000-0000-c000-000000000000",
+          "resourceAccess": [
+            {
+              "id": "perm-user-read-all",
+              "type": "Role"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "displayName": "app-agent-kyc-summary",
+      "tags": [
+        "ai-agent"
+      ],
+      "owners": [
+        {
+          "id": "owner-1"
+        }
+      ],
+      "passwordCredentials": [],
+      "keyCredentials": [
+        {
+          "type": "AsymmetricX509Cert"
+        }
+      ],
+      "requiredResourceAccess": []
+    },
+    {
+      "displayName": "app-test-orphan",
+      "tags": [],
+      "owners": [],
+      "passwordCredentials": [
+        {
+          "startDateTime": "2026-12-01T00:00:00Z",
+          "endDateTime": "2028-12-01T00:00:00Z"
+        }
+      ],
+      "requiredResourceAccess": [
+        {
+          "resourceAppId": "00000003-0000-0000-c000-000000000000",
+          "resourceAccess": [
+            {
+              "id": "perm-mail-readwrite",
+              "type": "Role"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "displayName": "app-agent-shadow",
+      "tags": [
+        "ai-agent"
+      ],
+      "owners": [
+        {
+          "id": "owner-2"
+        }
+      ],
+      "passwordCredentials": [],
+      "requiredResourceAccess": [
+        {
+          "resourceAppId": "00000003-0000-0000-c000-000000000000",
+          "resourceAccess": [
+            {
+              "id": "perm-mail-readwrite",
+              "type": "Role"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

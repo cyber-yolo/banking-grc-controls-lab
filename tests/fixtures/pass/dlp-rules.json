@@ -1,0 +1,21 @@
+{
+  "item": "DlpRules",
+  "method": "fixture",
+  "target": "synthetic",
+  "collected_at": "2026-12-03T14:05:00Z",
+  "status": "ok",
+  "error": null,
+  "value": [
+    {
+      "Name": "PV-RULE-001",
+      "ParentPolicyName": "PV-POL-001",
+      "Disabled": false,
+      "AccessScope": "NotInOrganization",
+      "ContentContainsSensitiveInformation": [
+        {
+          "name": "International Banking Account Number (IBAN)"
+        }
+      ]
+    }
+  ]
+}

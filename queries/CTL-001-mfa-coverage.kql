@@ -1,0 +1,7 @@
+// CTL-001 effectiveness: share of successful interactive sign-ins that satisfied MFA.
+// Break-glass accounts (bg-) are excluded: CTL-004 covers them.
+SigninLogs
+| where TimeGenerated > ago(7d)
+| where ResultType == "0" and IsInteractive == true
+| where not(UserPrincipalName startswith "bg-")
+| summarize total = count(), mfa = countif(AuthenticationRequirement == "multiFactorAuthentication")

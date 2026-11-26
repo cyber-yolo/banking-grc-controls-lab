@@ -1,0 +1,6 @@
+// CTL-003 effectiveness: PIM role activations and whether a justification was given.
+// Assumption to confirm in TC-306: the justification is in ResultReason.
+AuditLogs
+| where TimeGenerated > ago(30d)
+| where LoggedByService == "PIM" and OperationName == "Add member to role completed (PIM activation)"
+| summarize activations = count(), without_justification = countif(isempty(trim(" ", ResultReason)))

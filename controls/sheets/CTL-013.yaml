@@ -1,0 +1,40 @@
+id: CTL-013
+name: Cloud resources restricted to Swiss and EU regions
+domain: Data residency
+type: preventive
+automation: automated
+frequency: daily
+status: written
+owner_role: Cloud platform engineering (first line)
+reviewer_role: Compliance and data protection officer (second line)
+objective: >
+  Azure resources holding or processing lab data can only be created in
+  Switzerland or EU regions, as a technical support to cross-border disclosure
+  rules and client data location commitments.
+risks: [RSK-08]
+requirements: [REQ-CH-12, REQ-CH-05, REQ-GDPR-03, REQ-CH-03]
+implementation:
+  platform: Azure Policy
+  configuration: Built-in "Allowed locations" and "Allowed locations for resource groups" assigned at subscription scope with effect deny.
+  terraform: infra/terraform/policy.tf
+evidence:
+  - {id: EV-021, item: PolicyAssignments, description: Azure Policy assignments}
+  - {id: EV-022, item: PolicyComplianceSummary, description: Azure Policy compliance summary}
+assertions:
+  - {id: CTL-013-A1, test: design, text: Both CTL-013 location assignments exist with enforcement Default}
+  - {id: CTL-013-A2, test: effectiveness, text: No non-compliant resource for the CTL-013 assignments}
+tests:
+  design:
+    id: TC-325
+    steps:
+      - Apply Terraform. Run the collector for EV-021 and the evaluator.
+    expected: CTL-013-A1 PASS
+  effectiveness:
+    id: TC-326
+    steps:
+      - Try to create a storage account in eastus in the lab resource group. Wait for the compliance scan (up to 24 hours, TO VERIFY), run the collector for EV-022 and the evaluator.
+    expected: Creation denied with RequestDisallowedByPolicy; CTL-013-A2 PASS
+detections: [DET-009]
+limits:
+  - Microsoft 365 data location is set at tenant creation and is not covered by Azure Policy; it is recorded manually in the register of information.
+  - Region restriction does not prevent access from abroad or support by the provider from third countries.

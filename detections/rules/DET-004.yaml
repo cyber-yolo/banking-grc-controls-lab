@@ -1,0 +1,40 @@
+id: DET-004
+name: Password spray from one IP address
+status: written
+severity: Medium
+banking_scenario: >
+  Credential attack against staff accounts to gain a foothold in the bank's
+  Microsoft 365 tenant (mailboxes with client data, payment approvals by e-mail).
+tactics: [CredentialAccess]
+techniques: [T1110]
+attack: [T1110.003]
+attack_rationale: T1110.003 Brute Force, Password Spraying.
+data_sources: [SigninLogs]
+query_file: DET-004.kql
+query_frequency: PT30M
+query_period: PT1H
+trigger_threshold: 0
+parameters:
+  min_users: 2
+  min_attempts: 4
+thresholds:
+  lab: 2 distinct accounts and 4 failed attempts from one IP in 1 hour (the lab has 3 accounts)
+  production_starting_point: 10 distinct accounts and 20 failures from one IP in 1 hour (assumption)
+entities:
+  - {entity_type: IP, identifier: Address, column: IPAddress}
+tests:
+  positive:
+    id: TC-207
+    steps:
+      - From one browser session, sign in twice with a wrong password for user1, then twice for user2.
+      - Stop before smart lockout (default 10 failures); do not use any tool, only the sign-in page.
+    expected: One incident, IPAddress = workstation public IP, TargetedUsers = 2
+  negative:
+    id: TC-208
+    steps:
+      - Two wrong passwords for user1 only, then a correct sign-in.
+    expected: No incident from DET-004
+false_positives:
+  - Shared egress IP (bank proxy, VPN) with many users mistyping passwords on a Monday morning
+response: [PB-001]
+controls: [CTL-001, CTL-011]

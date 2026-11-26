@@ -1,0 +1,52 @@
+# Banking threat scenarios. Each one links to the risks it creates, the
+# controls that reduce them and the detections that see them.
+scenarios:
+  - id: SCN-G01
+    name: Insider sends client IBANs to a personal address before leaving the bank
+    jurisdictions: [CH, LU]
+    narrative: >
+      A relationship manager under notice e-mails a client list with IBANs to a
+      private mailbox, in small batches over several days. Banking secrecy
+      (Swiss Banking Act Art. 47, Luxembourg financial sector law Art. 41) and
+      data protection rules are engaged; the incident may be reportable.
+    risks: [RSK-03, RSK-07]
+    controls: [CTL-009, CTL-011, CTL-012]
+    detections: [DET-001, DET-002]
+  - id: SCN-G02
+    name: Mass download of a client library to an unmanaged location
+    jurisdictions: [CH, LU]
+    narrative: >
+      A compromised or departing user downloads a SharePoint client library or
+      shares it with an anonymous link.
+    risks: [RSK-03, RSK-08]
+    controls: [CTL-009, CTL-013, CTL-011]
+    detections: [DET-007, DET-008]
+  - id: SCN-G03
+    name: Privileged access abused to switch off controls
+    jurisdictions: [CH, LU, EU]
+    narrative: >
+      An administrator account, legitimately or after takeover, gains a tier-0
+      role outside PIM, deletes a diagnostic setting or an analytics rule and
+      then acts unseen.
+    risks: [RSK-02, RSK-06]
+    controls: [CTL-003, CTL-004, CTL-005, CTL-010, CTL-011]
+    detections: [DET-006, DET-009, DET-012]
+  - id: SCN-G04
+    name: Staff account takeover followed by payment fraud
+    jurisdictions: [CH, LU, EU]
+    narrative: >
+      Password spray or MFA fatigue gives access to a payments officer mailbox;
+      the attacker hides payment confirmation e-mails with an inbox rule (BEC).
+    risks: [RSK-01]
+    controls: [CTL-001, CTL-002, CTL-011]
+    detections: [DET-003, DET-004, DET-005, DET-011]
+  - id: SCN-G05
+    name: AI agent or integration identity abused
+    jurisdictions: [CH, LU, EU]
+    narrative: >
+      A KYC summary agent's app registration receives an extra secret or a
+      broader mail permission; the credential is used from outside to read
+      client mail. Alternatively a shadow agent is registered without inventory.
+    risks: [RSK-04, RSK-05]
+    controls: [CTL-006, CTL-007, CTL-008, CTL-011]
+    detections: [DET-010, DET-013]

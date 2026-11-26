@@ -1,0 +1,41 @@
+id: CTL-010
+name: Security logs centralised and retained
+domain: Logging and detection
+type: detective
+automation: automated
+frequency: daily
+status: written
+owner_role: Security operations (first line)
+reviewer_role: ICT risk management (second line)
+objective: >
+  Entra ID sign-in and audit logs, Microsoft 365 audit, Azure activity and
+  security alerts reach one Log Analytics workspace every day and are retained
+  for the period the bank has set.
+risks: [RSK-06]
+requirements: [REQ-RMF-03, REQ-DORA-07, REQ-CH-02, REQ-CH-11, REQ-AIA-05, REQ-LU-02]
+implementation:
+  platform: Azure Monitor diagnostic settings, Log Analytics, Microsoft Sentinel connectors
+  configuration: Entra diagnostic setting (SignInLogs, AuditLogs), subscription activity log, Microsoft 365 and Defender XDR connectors, retention 90 days.
+  terraform: infra/terraform/diagnostics.tf
+evidence:
+  - {id: EV-015, item: EntraDiagnosticSettings, description: Entra ID diagnostic settings}
+  - {id: EV-016, item: Workspace, description: Workspace properties including retention}
+  - {id: EV-017, item: KqlTableFreshness, description: Rows and last event per table over 24 hours}
+assertions:
+  - {id: CTL-010-A1, test: design, text: An Entra diagnostic setting sends SignInLogs and AuditLogs to a Log Analytics workspace}
+  - {id: CTL-010-A2, test: design, text: Workspace retention is at least the lab target of 90 days}
+  - {id: CTL-010-A3, test: effectiveness, text: SigninLogs, AuditLogs, OfficeActivity, AzureActivity and SecurityAlert each received rows in the last 24 hours}
+tests:
+  design:
+    id: TC-319
+    steps:
+      - Apply Terraform with connect_entra_logs = true. Run the collector for EV-015 and EV-016 and the evaluator.
+    expected: CTL-010-A1 and CTL-010-A2 PASS
+  effectiveness:
+    id: TC-320
+    steps:
+      - On day 3, run the collector for EV-017 and the evaluator.
+    expected: CTL-010-A3 PASS; per-table delay recorded
+detections: [DET-009]
+limits:
+  - 90 days is below the one-year log retention of the Swiss DPO case and close to the AI Act six-month minimum. Accepted for the lab in RA-001; a bank would archive to cheaper storage.

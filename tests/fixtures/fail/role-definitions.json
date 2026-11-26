@@ -1,0 +1,22 @@
+{
+  "item": "RoleDefinitions",
+  "method": "fixture",
+  "target": "synthetic",
+  "collected_at": "2026-12-03T14:05:00Z",
+  "status": "ok",
+  "error": null,
+  "value": [
+    {
+      "id": "role-ga",
+      "displayName": "Global Administrator"
+    },
+    {
+      "id": "role-secadmin",
+      "displayName": "Security Administrator"
+    },
+    {
+      "id": "role-reader",
+      "displayName": "Message Center Reader"
+    }
+  ]
+}

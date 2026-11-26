@@ -1,0 +1,40 @@
+id: DET-005
+name: Successful sign-in after repeated failures
+status: written
+severity: High
+banking_scenario: >
+  Follow-up of DET-004: one of the guessed passwords worked. The account must be
+  treated as compromised until proven otherwise.
+tactics: [CredentialAccess, InitialAccess]
+techniques: [T1110, T1078]
+attack: [T1110.001, T1078.004]
+attack_rationale: T1110.001 Password Guessing followed by T1078.004 Valid Accounts, Cloud Accounts.
+data_sources: [SigninLogs]
+query_file: DET-005.kql
+query_frequency: PT30M
+query_period: PT2H
+trigger_threshold: 0
+parameters:
+  min_failures: 3
+  success_window_minutes: 30
+thresholds:
+  lab: 3 failures then a success from the same IP within 30 minutes
+  production_starting_point: 5 failures, same window (assumption)
+entities:
+  - {entity_type: Account, identifier: FullName, column: UserPrincipalName}
+  - {entity_type: IP, identifier: Address, column: IPAddress}
+tests:
+  positive:
+    id: TC-209
+    steps:
+      - Three wrong passwords for user1, then a correct sign-in, same browser, within 10 minutes.
+    expected: One incident for user1 and the workstation IP
+  negative:
+    id: TC-210
+    steps:
+      - One wrong password for user2, then a correct sign-in.
+    expected: No incident
+false_positives:
+  - User who forgot a recently changed password
+response: [PB-001, PB-003]
+controls: [CTL-001, CTL-011]

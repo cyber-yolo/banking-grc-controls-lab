@@ -1,0 +1,38 @@
+id: DET-006
+name: Privileged Entra ID role assigned
+status: written
+severity: High
+banking_scenario: >
+  Privilege escalation in the tenant: an account gains a role that can disable
+  DLP, read every mailbox or change audit settings. In a bank, privileged role
+  changes follow a change ticket; any assignment outside it is an incident.
+tactics: [Persistence, PrivilegeEscalation]
+techniques: [T1098]
+attack: [T1098.003]
+attack_rationale: T1098.003 Account Manipulation, Additional Cloud Roles.
+data_sources: [AuditLogs]
+query_file: DET-006.kql
+query_frequency: PT1H
+query_period: PT1H
+trigger_threshold: 0
+parameters: {}
+thresholds:
+  lab: any successful assignment to a role in the list
+  production_starting_point: same, suppressed when a matching change ticket exists (not modelled)
+entities:
+  - {entity_type: Account, identifier: FullName, column: TargetUser}
+tests:
+  positive:
+    id: TC-211
+    steps:
+      - As the lab admin, assign Compliance Administrator to user2. Record the time. Remove it after the test.
+    expected: One incident, RoleName = Compliance Administrator, TargetUser = user2
+  negative:
+    id: TC-212
+    steps:
+      - Assign the role "Message Center Reader" to user2.
+    expected: No incident
+false_positives:
+  - Planned administration (the lab admin itself during setup: enable the rule after setup)
+response: [PB-001, PB-002]
+controls: [CTL-003, CTL-011]

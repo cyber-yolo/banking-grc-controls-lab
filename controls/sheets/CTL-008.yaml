@@ -1,0 +1,37 @@
+id: CTL-008
+name: Client data kept out of AI assistants
+domain: Data protection
+type: preventive
+automation: manual
+frequency: monthly
+status: draft
+owner_role: Data protection engineering (first line)
+reviewer_role: Compliance and data protection officer (second line)
+objective: >
+  Client-identifying data (IBAN, client numbers) and documents labelled
+  Confidential cannot be sent to or processed by AI assistants outside the
+  approved scope, and AI interactions are visible to compliance.
+risks: [RSK-05, RSK-03]
+requirements: [REQ-DORA-06, REQ-CH-03, REQ-CH-09, REQ-LU-01, REQ-AIA-05, REQ-GDPR-01, REQ-CH-05]
+implementation:
+  platform: Microsoft Purview (DLP for the Microsoft 365 Copilot location, Data Security Posture Management for AI, Endpoint DLP for third-party AI websites)
+  configuration: DLP policy excluding Confidential-labelled content from Copilot processing; Endpoint DLP blocking paste of IBANs into browser AI sites.
+  terraform: null
+evidence:
+  - {id: EV-013, item: DlpPolicies, description: Purview DLP policies (export)}
+  - {id: EV-014, item: DlpRules, description: Purview DLP rules (export)}
+assertions: []
+tests:
+  design:
+    id: TC-315
+    steps:
+      - Export DLP policies. Reviewer checks that a policy covers the Copilot location or the endpoint location with the IBAN SIT.
+    expected: Reviewer sign-off recorded in the run sheet
+  effectiveness:
+    id: TC-316
+    steps:
+      - On the Windows 11 VM (sister repo TC-004 to TC-009 setup), paste a synthetic IBAN into a third-party AI chat website.
+    expected: Paste blocked, Activity Explorer event, alert in Sentinel
+detections: [DET-001]
+limits:
+  - Microsoft 365 Copilot is a paid add-on, not part of the E5 trial (TO VERIFY). Without it only the Endpoint DLP path is testable. Accepted in RA-003.
