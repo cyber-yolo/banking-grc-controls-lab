@@ -11,6 +11,10 @@
 | A-05 | PIM activation justification is in `AuditLogs.ResultReason` | TC-306 | Adjust `queries/CTL-003-pim-activations.kql` |
 | A-06 | Terraform under an Azure CLI sign-in can create Conditional Access policies | Phase 2 | Portal fallback, same names |
 | A-07 | Microsoft 365 Copilot is not available in the trial | Phase 1 | If available, CTL-008 becomes testable, RA-003 closed |
+| A-08 | Direct role assignments appear in `AuditLogs` as "Add member to role" not initiated by the MS-PIM service, PIM activations as the same operation initiated by MS-PIM | TC-306 | Adjust `queries/CTL-003-direct-assignments.kql` |
+| A-09 | Graph v1.0 `roleManagementPolicyAssignments` with `$expand=policy($expand=rules)` returns the PIM rules with Microsoft's fixed rule ids | TC-305 | Adjust `items.csv` and CTL-003-A4 to A7 |
+| A-10 | Defender for Cloud on the free tier assigns the Microsoft cloud security benchmark and lists it in regulatory compliance | TC-329 | CTL-015-A2 or A4 become manual checks in the portal |
+| A-11 | Assessments return `status.firstEvaluationDate` and `metadata.severity` with `$expand=metadata` | TC-329 | Service levels measured from the register instead (add a `first_seen` column) |
 
 ## Limits
 

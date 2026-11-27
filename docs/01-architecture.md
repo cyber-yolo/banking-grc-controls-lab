@@ -27,7 +27,7 @@
 
 ```text
  Microsoft 365 E5 trial tenant (shared with the DLP lab rebuild)
- ├── Entra ID: users, break-glass accounts, Conditional Access, PIM, access reviews, app registrations, AI agent apps
+ ├── Entra ID: users, break-glass accounts, Conditional Access, PIM (role settings, CTL-003), access reviews, app registrations, AI agent apps
  ├── Purview: DLP PV-POL-001 (CTL-009), Copilot / Endpoint DLP (CTL-008)
  └── Unified audit log
         │ connectors and diagnostic settings
@@ -36,7 +36,7 @@
  ├── Log Analytics workspace (daily cap, 90-day retention) + Microsoft Sentinel (DET-001..013)
  ├── Storage account for evidence (Entra auth only, versioning)
  ├── Azure Policy assignments at subscription scope (CTL-013, tags)
- ├── Defender for Cloud foundational CSPM (free, CTL-015)
+ ├── Defender for Cloud foundational CSPM (free, every plan pinned to Free, MCSB baseline, CTL-015)
  └── Budget alerts
         ▲
         │ az login, Connect-MgGraph (delegated, read-only scopes)
@@ -61,6 +61,7 @@ risk/              risk register and risk acceptances
 scenarios/         banking threat scenarios
 ai-governance/     AI system inventory
 third-parties/     register of information, exit plans
+posture/           cloud posture remediation register (Defender for Cloud findings)
 incident-response/ classification worksheet, reporting clocks
 detections/        Sentinel analytics rules (YAML sheet + KQL)
 playbooks/         SOAR designs

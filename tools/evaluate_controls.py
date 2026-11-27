@@ -45,6 +45,21 @@ SECRET_MAX_DAYS = 180
 MFA_TARGET = 0.99
 RETENTION_TARGET_DAYS = 90
 SECURE_SCORE_TARGET = 0.70
+# PIM role settings (CTL-003). Lab targets, not regulatory thresholds.
+PIM_MAX_ACTIVATION = dt.timedelta(hours=4)
+PIM_MAX_ELIGIBILITY = dt.timedelta(days=365)
+PIM_APPROVAL_ROLES = {"Global Administrator", "Privileged Role Administrator"}
+GLOBAL_ADMIN_MAX = 4  # Microsoft recommends fewer than five Global Administrators
+# Access review settings (CTL-005).
+REVIEW_MAX_AGE_DAYS = 92
+REVIEW_DONE_STATUSES = {"Completed", "Applied", "AutoReviewed"}
+# Defender for Cloud (CTL-015).
+# Public ID of the built-in "Microsoft cloud security benchmark" initiative, the
+# same in every tenant (TO VERIFY on the first run; display name used as fallback).
+MCSB_SET_ID = "1f3afdf9-d0c9-4c3d-847f-89da613e70a8"
+MCSB_NAME = "microsoft cloud security benchmark"
+REMEDIATION_SLA_DAYS = {"High": 30, "Medium": 90, "Low": 180}  # lab choice, from first evaluation
+TRACKED_SEVERITIES = {"High", "Medium"}
 REQUIRED_TABLES = {"SigninLogs", "AuditLogs", "OfficeActivity", "AzureActivity", "SecurityAlert"}
 REGISTER_COLUMNS = [
     "id", "provider", "service", "ict_service_type", "supports_critical_function", "data_location",
@@ -120,6 +135,18 @@ def g(obj, *path, default=None):
 
 def parse_ts(text: str) -> dt.datetime:
     return dt.datetime.fromisoformat(text.replace("Z", "+00:00"))
+
+
+ISO_DURATION = re.compile(r"^P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?)?$")
+
+
+def iso_duration(text: str | None) -> dt.timedelta | None:
+    """ISO 8601 duration (PT4H, P365D, P1Y) to timedelta. Years count 365 days, months 30."""
+    m = ISO_DURATION.match(text or "")
+    if not m or not any(m.groups()):
+        return None
+    y, mo, w, d, h, mi, sec = (int(x or 0) for x in m.groups())
+    return dt.timedelta(days=365 * y + 30 * mo + 7 * w + d, hours=h, minutes=mi, seconds=sec)
 
 
 def names(values) -> str:
@@ -256,6 +283,99 @@ def ctl003_a3(ctx):
     return (PASS if missing == 0 else FAIL), f"{total} activation(s), {missing} without justification"
 
 
+# PIM role settings: one policy per directory role, rules identified by id.
+# Rule ids are Microsoft's fixed names (Enablement_EndUser_Assignment, ...).
+
+def tier0_role_rules(ctx) -> dict[str, dict | None]:
+    """Tier-0 role name -> {rule id: rule}, or None when no policy was collected for it."""
+    roles = role_names(ctx)
+    out: dict[str, dict | None] = {name: None for name in roles.values() if name in TIER0_ROLES}
+    for pa in ctx.evidence("RoleManagementPolicies"):
+        name = roles.get(pa.get("roleDefinitionId"))
+        if name in TIER0_ROLES:
+            out[name] = {r.get("id"): r for r in g(pa, "policy", "rules", default=[]) or []}
+    if not out:
+        raise NoEvidence("RoleDefinitions: no tier-0 role found")
+    return out
+
+
+def check_roles(rules_by_role: dict, check) -> tuple[str, str]:
+    """Run check(rules) -> problem text or None on each role; FAIL lists the roles with a problem."""
+    bad = []
+    for role, rules in sorted(rules_by_role.items()):
+        problem = "no PIM policy collected" if rules is None else check(rules)
+        if problem:
+            bad.append(f"{role} ({problem})")
+    return (FAIL, names(bad)) if bad else (PASS, f"{len(rules_by_role)} tier-0 role(s) checked")
+
+
+@assertion("CTL-003-A4")
+def ctl003_a4(ctx):
+    def check(rules):
+        enabled = set(g(rules, "Enablement_EndUser_Assignment", "enabledRules", default=[]) or [])
+        auth_context = bool(g(rules, "AuthenticationContext_EndUser_Assignment", "isEnabled", default=False))
+        missing = ([] if ("MultiFactorAuthentication" in enabled or auth_context) else ["MFA"]) + \
+                  ([] if "Justification" in enabled else ["justification"])
+        return "no " + " and no ".join(missing) + " on activation" if missing else None
+    return check_roles(tier0_role_rules(ctx), check)
+
+
+@assertion("CTL-003-A5")
+def ctl003_a5(ctx):
+    def check(rules):
+        raw = g(rules, "Expiration_EndUser_Assignment", "maximumDuration")
+        limit = iso_duration(raw)
+        if limit is None:
+            return "maximum activation duration not readable"
+        return None if limit <= PIM_MAX_ACTIVATION else f"activation up to {raw}"
+    return check_roles(tier0_role_rules(ctx), check)
+
+
+@assertion("CTL-003-A6")
+def ctl003_a6(ctx):
+    def check(rules):
+        setting = g(rules, "Approval_EndUser_Assignment", "setting", default={}) or {}
+        approvers = [a for st in setting.get("approvalStages") or [] for a in st.get("primaryApprovers") or []]
+        if not setting.get("isApprovalRequired"):
+            return "approval not required"
+        return None if approvers else "approval required but no approver"
+    scope = {k: v for k, v in tier0_role_rules(ctx).items() if k in PIM_APPROVAL_ROLES}
+    if not scope:
+        raise NoEvidence("RoleDefinitions: Global Administrator and Privileged Role Administrator not found")
+    return check_roles(scope, check)
+
+
+@assertion("CTL-003-A7")
+def ctl003_a7(ctx):
+    def check(rules):
+        rule = rules.get("Expiration_Admin_Eligibility") or {}
+        if not rule.get("isExpirationRequired"):
+            return "permanent eligibility allowed"
+        limit = iso_duration(rule.get("maximumDuration"))
+        return None if limit is not None and limit <= PIM_MAX_ELIGIBILITY else f"eligibility up to {rule.get('maximumDuration')}"
+    return check_roles(tier0_role_rules(ctx), check)
+
+
+def principal_key(a: dict) -> str:
+    return str(g(a, "principal", "userPrincipalName") or g(a, "principal", "displayName") or a.get("principalId"))
+
+
+@assertion("CTL-003-A8")
+def ctl003_a8(ctx):
+    roles = role_names(ctx)
+    holders = {principal_key(a) for item in ("RoleAssignmentInstances", "RoleEligibilityInstances")
+               for a in ctx.evidence(item) if roles.get(a.get("roleDefinitionId")) == "Global Administrator"}
+    status = PASS if 0 < len(holders) <= GLOBAL_ADMIN_MAX else FAIL
+    return status, f"{len(holders)} Global Administrator holder(s), active or eligible, break-glass included (maximum {GLOBAL_ADMIN_MAX})"
+
+
+@assertion("CTL-003-A9")
+def ctl003_a9(ctx):
+    rows = ctx.evidence("KqlDirectPrivilegedAssignments")
+    direct = int(rows[0].get("direct_assignments", 0)) if rows else 0
+    return (PASS if direct == 0 else FAIL), f"{direct} tier-0 assignment(s) made outside PIM over 30 days"
+
+
 def months_between_runs(pattern: dict) -> float | None:
     kind, interval = (pattern.get("type") or "").lower(), pattern.get("interval") or 1
     if "monthly" in kind:
@@ -267,15 +387,19 @@ def months_between_runs(pattern: dict) -> float | None:
     return None
 
 
+def role_reviews(ctx):
+    return [d for d in ctx.evidence("AccessReviewDefinitions") if "rolemanagement" in json.dumps(d.get("scope", {})).lower()]
+
+
 @assertion("CTL-005-A1")
 def ctl005_a1(ctx):
-    hits = [d for d in ctx.evidence("AccessReviewDefinitions") if "rolemanagement" in json.dumps(d.get("scope", {})).lower()]
+    hits = role_reviews(ctx)
     return (PASS, f"role reviews: {names(d['displayName'] for d in hits)}") if hits else (FAIL, "no access review on directory roles")
 
 
 @assertion("CTL-005-A2")
 def ctl005_a2(ctx):
-    hits = [d for d in ctx.evidence("AccessReviewDefinitions") if "rolemanagement" in json.dumps(d.get("scope", {})).lower()]
+    hits = role_reviews(ctx)
     if not hits:
         return FAIL, "no role review to check (see CTL-005-A1)"
     for d in hits:
@@ -283,6 +407,57 @@ def ctl005_a2(ctx):
         if months is not None and months <= 3:
             return PASS, f"{d['displayName']}: every {months:.1f} month(s)"
     return FAIL, "no role review recurs at least quarterly"
+
+
+@assertion("CTL-005-A3")
+def ctl005_a3(ctx):
+    hits = role_reviews(ctx)
+    if not hits:
+        return FAIL, "no role review to check (see CTL-005-A1)"
+    bad = []
+    for d in hits:
+        st = d.get("settings") or {}
+        missing = [label for label, ok in (
+            ("auto-apply", st.get("autoApplyDecisionsEnabled") is True),
+            ("deny when no response", st.get("defaultDecisionEnabled") is True and st.get("defaultDecision") == "Deny"),
+            ("justification on approval", st.get("justificationRequiredOnApproval") is True),
+        ) if not ok]
+        if missing:
+            bad.append(f"{d['displayName']} (missing {', '.join(missing)})")
+    return (FAIL, names(bad)) if bad else (PASS, f"{len(hits)} role review(s) remove unconfirmed access")
+
+
+def is_self_review(reviewers: list) -> bool:
+    # Representation of self-review for role reviews TO VERIFY on the first run.
+    return any("principal" in (r.get("query") or "").lower() and "/users/" not in (r.get("query") or "").lower()
+               for r in reviewers)
+
+
+@assertion("CTL-005-A4")
+def ctl005_a4(ctx):
+    hits = role_reviews(ctx)
+    if not hits:
+        return FAIL, "no role review to check (see CTL-005-A1)"
+    bad = [d["displayName"] for d in hits if not (d.get("reviewers") or []) or is_self_review(d.get("reviewers") or [])]
+    return (FAIL, f"no independent reviewer: {names(bad)}") if bad else (PASS, "reviewers named, no self-review")
+
+
+@assertion("CTL-005-A5")
+def ctl005_a5(ctx):
+    hits = role_reviews(ctx)
+    if not hits:
+        return FAIL, "no role review to check (see CTL-005-A1)"
+    done = []
+    for d in hits:
+        for inst in d.get("instances") or []:
+            if inst.get("status") in REVIEW_DONE_STATUSES and inst.get("endDateTime"):
+                age = (ctx.as_of - parse_ts(inst["endDateTime"]).date()).days
+                if 0 <= age <= REVIEW_MAX_AGE_DAYS:
+                    done.append((age, d["displayName"], inst["status"]))
+    if not done:
+        return FAIL, f"no role review instance completed in the last {REVIEW_MAX_AGE_DAYS} days"
+    age, name, status = min(done)
+    return PASS, f"{name}: last instance {status} {age} day(s) before {ctx.as_of}"
 
 
 # ---------- Non-human and AI agent identities (CTL-006, CTL-007) ----------
@@ -548,6 +723,103 @@ def ctl015_a1(ctx):
         pct = score["current"] / score["max"]
     pct = float(pct or 0)
     return (PASS if pct >= SECURE_SCORE_TARGET else FAIL), f"secure score {pct:.0%} (lab target {SECURE_SCORE_TARGET:.0%})"
+
+
+@assertion("CTL-015-A2")
+def ctl015_a2(ctx):
+    found = [a for a in ctx.evidence("PolicyAssignments")
+             if (a.get("policyDefinitionId") or "").lower().endswith(MCSB_SET_ID)
+             or MCSB_NAME in (a.get("displayName") or "").lower()]
+    if not found:
+        return FAIL, "Microsoft cloud security benchmark initiative not assigned to the subscription"
+    enforced = [a for a in found if a.get("enforcementMode", "Default") == "Default"]
+    return (PASS if enforced else FAIL), f"{len(found)} benchmark assignment(s), {len(enforced)} enforced"
+
+
+@assertion("CTL-015-A3")
+def ctl015_a3(ctx):
+    plans = {p.get("name"): g(p, "properties", "pricingTier") for p in ctx.evidence("DefenderPlans")}
+    if not plans:
+        raise NoEvidence("DefenderPlans: empty")
+    paid = sorted(n for n, tier in plans.items() if tier != "Free")
+    if paid:
+        return FAIL, f"paid Defender plan(s) on: {names(paid)} (cost guardrail)"
+    if "CloudPosture" not in plans:
+        return FAIL, "CloudPosture plan not listed: foundational CSPM state unknown"
+    return PASS, f"{len(plans)} plan(s), all Free: foundational CSPM only"
+
+
+@assertion("CTL-015-A4")
+def ctl015_a4(ctx):
+    std = [s for s in ctx.evidence("RegulatoryComplianceStandards")
+           if "security-benchmark" in (s.get("name") or "").lower()]
+    if not std:
+        return FAIL, "benchmark standard not in regulatory compliance"
+    p = std[0].get("properties") or {}
+    state = p.get("state")
+    detail = (f"{std[0].get('name')}: state {state}, {p.get('passedControls', 0)} passed, "
+              f"{p.get('failedControls', 0)} failed, {p.get('skippedControls', 0)} skipped controls")
+    return (PASS if state in {"Passed", "Failed"} else FAIL), detail
+
+
+def unhealthy_recommendations(ctx) -> dict[str, dict]:
+    """Recommendation name -> worst severity and earliest first evaluation, over its unhealthy resources."""
+    rank = {"Low": 1, "Medium": 2, "High": 3}
+    assessments = ctx.evidence("SecurityAssessments")
+    if not assessments:
+        raise NoEvidence("SecurityAssessments: empty (assessment not run yet?)")
+    out: dict[str, dict] = {}
+    for a in assessments:
+        p = a.get("properties") or {}
+        if g(p, "status", "code") != "Unhealthy":
+            continue
+        name = p.get("displayName") or a.get("name")
+        sev = g(p, "metadata", "severity", default="Low")
+        first = g(p, "status", "firstEvaluationDate")
+        rec = out.setdefault(name, {"severity": sev, "first": first, "resources": 0})
+        rec["resources"] += 1
+        if rank.get(sev, 0) > rank.get(rec["severity"], 0):
+            rec["severity"] = sev
+        if first and (not rec["first"] or first < rec["first"]):
+            rec["first"] = first
+    return out
+
+
+def remediation_register(ctx) -> dict[str, dict]:
+    return {r["recommendation"]: r for r in ctx.repo_csv("RemediationRegister")}
+
+
+@assertion("CTL-015-A5")
+def ctl015_a5(ctx):
+    findings = {k: v for k, v in unhealthy_recommendations(ctx).items() if v["severity"] in TRACKED_SEVERITIES}
+    register = remediation_register(ctx)
+    untracked = [f"{k} ({v['severity']})" for k, v in findings.items() if k not in register]
+    if untracked:
+        return FAIL, f"unhealthy and not in the remediation register: {names(untracked)}"
+    return PASS, f"{len(findings)} High or Medium recommendation(s), all tracked"
+
+
+@assertion("CTL-015-A6")
+def ctl015_a6(ctx):
+    findings = unhealthy_recommendations(ctx)
+    bad = []
+    for name, r in remediation_register(ctx).items():
+        f = findings.get(name)
+        if r["decision"] == "accept":
+            ra = (r.get("risk_acceptance") or "").strip()
+            if not ra or not (ctx.root / "risk" / "acceptances" / f"{ra}.md").exists():
+                bad.append(f"{r['id']} (accepted without risk acceptance record)")
+            continue
+        if r["status"] == "closed":
+            if f:
+                bad.append(f"{r['id']} (closed but still unhealthy on {f['resources']} resource(s))")
+            continue
+        if f and f["first"]:
+            age = (ctx.as_of - parse_ts(f["first"]).date()).days
+            sla = REMEDIATION_SLA_DAYS.get(f["severity"], REMEDIATION_SLA_DAYS["Low"])
+            if age > sla:
+                bad.append(f"{r['id']} ({f['severity']}, open {age} days, SLA {sla})")
+    return (FAIL, names(bad)) if bad else (PASS, "no overdue remediation, closures confirmed by the evidence")
 
 
 # ---------- Engine ----------

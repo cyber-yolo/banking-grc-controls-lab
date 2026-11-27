@@ -33,6 +33,7 @@ References are paraphrased and **TO VERIFY** until the file's `verified_on` is s
 | EU | REQ-RMF-04 | Art. 23 | medium, TO VERIFY | in | CTL-011 | TC-321, TC-322 |
 | EU | REQ-RMF-05 | Art. 10 | low, TO VERIFY | partial | CTL-015 | TC-329, TC-330 |
 | EU | REQ-RMF-06 | Art. 4 and 5 | low, TO VERIFY | partial | CTL-006 | TC-311, TC-312 |
+| EU | REQ-RMF-07 | Art. 11 | low, TO VERIFY | partial | CTL-015 | TC-329, TC-330 |
 | EU | REQ-DORA-01 | Art. 5 | high, TO VERIFY | partial | CTL-016 | TC-331, TC-332 |
 | EU | REQ-DORA-02 | Art. 6 | high, TO VERIFY | partial | CTL-016 | TC-331, TC-332 |
 | EU | REQ-DORA-03 | Art. 8 | high, TO VERIFY | partial | CTL-006, CTL-007 | TC-311, TC-312, TC-313, TC-314 |
@@ -48,7 +49,7 @@ References are paraphrased and **TO VERIFY** until the file's `verified_on` is s
 | EU | REQ-DORA-13 | Art. 24 and 25 | high, TO VERIFY | partial | CTL-011 | TC-321, TC-322 |
 | EU | REQ-DORA-14 | Art. 28(3) | high, TO VERIFY | in | CTL-014 | TC-327, TC-328 |
 | EU | REQ-DORA-15 | Art. 30 | high, TO VERIFY | out | - | - |
-| EU | REQ-EBA-01 | EBA/GL/2019/04, section 3.4 (information security) | medium, TO VERIFY | in | CTL-001, CTL-003, CTL-011 | TC-301, TC-302, TC-305, TC-306, TC-321, TC-322 |
+| EU | REQ-EBA-01 | EBA/GL/2019/04, section 3.4 (information security) | medium, TO VERIFY | in | CTL-001, CTL-003, CTL-011, CTL-015 | TC-301, TC-302, TC-305, TC-306, TC-321, TC-322, TC-329, TC-330 |
 | EU | REQ-EBA-02 | EBA/GL/2019/02 | high, TO VERIFY | partial | CTL-014 | TC-327, TC-328 |
 | EU | REQ-EBA-03 | EBA/GL/2021/05 | high, TO VERIFY | partial | CTL-005, CTL-016 | TC-309, TC-310, TC-331, TC-332 |
 | EU | REQ-GDPR-01 | GDPR Art. 32 | high, TO VERIFY | in | CTL-001, CTL-008, CTL-009 | TC-301, TC-302, TC-315, TC-316, TC-317, TC-318 |
@@ -59,7 +60,7 @@ References are paraphrased and **TO VERIFY** until the file's `verified_on` is s
 | EU | REQ-NIS2-03 | Art. 21(2)(j) | medium, TO VERIFY | in | CTL-001 | TC-301, TC-302 |
 | EU | REQ-NIS2-04 | Art. 23 | high, TO VERIFY | out | - | - |
 | LU | REQ-LU-01 | Law of 5 April 1993 on the financial sector, Art. 41 | high, TO VERIFY | in | CTL-008, CTL-009 | TC-315, TC-316, TC-317, TC-318 |
-| LU | REQ-LU-02 | CSSF Circular 20/750, as amended (latest seen 25/881 and 26/915) | medium, TO VERIFY | partial | CTL-001, CTL-003, CTL-010, CTL-016 | TC-301, TC-302, TC-305, TC-306, TC-319, TC-320, TC-331, TC-332 |
+| LU | REQ-LU-02 | CSSF Circular 20/750, as amended (latest seen 25/881 and 26/915) | medium, TO VERIFY | partial | CTL-001, CTL-003, CTL-005, CTL-010, CTL-015, CTL-016 | TC-301, TC-302, TC-305, TC-306, TC-309, TC-310, TC-319, TC-320, TC-329, TC-330, TC-331, TC-332 |
 | LU | REQ-LU-03 | CSSF Circular 25/882, as amended by 26/915 | medium, TO VERIFY | in | CTL-014 | TC-327, TC-328 |
 | LU | REQ-LU-04 | CSSF Circular 22/806, as amended by 25/883 and 26/915 | medium, TO VERIFY | out | - | - |
 | LU | REQ-LU-05 | CSSF Circular 12/552, as amended | high, TO VERIFY | partial | CTL-016 | TC-331, TC-332 |
@@ -71,9 +72,9 @@ References are paraphrased and **TO VERIFY** until the file's `verified_on` is s
 |---|---|---|---|---|---|
 | CTL-001 | Multi-factor authentication for all users | automated | EV-001 ConditionalAccessPolicies, EV-002 KqlMfaCoverage | 3 | DET-004, DET-005, DET-011 |
 | CTL-002 | Legacy authentication blocked | automated | EV-001 ConditionalAccessPolicies, EV-003 KqlLegacyAuth | 2 | - |
-| CTL-003 | Just-in-time privileged access | automated | EV-004 RoleDefinitions, EV-005 RoleAssignmentInstances, EV-006 RoleEligibilityInstances, EV-007 KqlPimActivations | 3 | DET-006 |
+| CTL-003 | Just-in-time privileged access | automated | EV-004 RoleDefinitions, EV-005 RoleAssignmentInstances, EV-006 RoleEligibilityInstances, EV-007 KqlPimActivations, EV-026 RoleManagementPolicies, EV-027 KqlDirectPrivilegedAssignments | 9 | DET-006 |
 | CTL-004 | Emergency access accounts | automated | EV-001 ConditionalAccessPolicies, EV-008 BreakGlassUsers | 2 | DET-012 |
-| CTL-005 | Periodic review of privileged access | semi-automated | EV-009 AccessReviewDefinitions | 2 | - |
+| CTL-005 | Periodic review of privileged access | semi-automated | EV-009 AccessReviewDefinitions | 5 | - |
 | CTL-006 | Non-human identity hygiene | automated | EV-010 Applications, EV-011 GraphAppRoles | 3 | DET-010, DET-013 |
 | CTL-007 | AI agent inventory and least privilege | automated | EV-010 Applications, EV-011 GraphAppRoles, EV-012 AiSystemInventory | 3 | DET-013, DET-010 |
 | CTL-008 | Client data kept out of AI assistants | manual | EV-013 DlpPolicies, EV-014 DlpRules | 0 | DET-001 |
@@ -83,7 +84,7 @@ References are paraphrased and **TO VERIFY** until the file's `verified_on` is s
 | CTL-012 | Incident classification and reporting readiness | manual | EV-020 TabletopRecord | 0 | - |
 | CTL-013 | Cloud resources restricted to Swiss and EU regions | automated | EV-021 PolicyAssignments, EV-022 PolicyComplianceSummary | 2 | DET-009 |
 | CTL-014 | Register of information on ICT third-party providers | automated | EV-023 RegisterOfInformation | 2 | - |
-| CTL-015 | Cloud security posture baseline | automated | EV-024 SecureScores | 1 | - |
+| CTL-015 | Cloud security posture baseline | automated | EV-024 SecureScores, EV-021 PolicyAssignments, EV-028 DefenderPlans, EV-029 RegulatoryComplianceStandards, EV-030 SecurityAssessments, EV-031 RemediationRegister | 6 | - |
 | CTL-016 | Control framework governance and reporting | semi-automated | EV-025 RiskAcceptances | 1 | - |
 
 ## Out of scope requirements

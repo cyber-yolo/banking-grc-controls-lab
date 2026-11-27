@@ -35,4 +35,8 @@ manage_conditional_access = false
 conditional_access_state  = "enabledForReportingButNotEnforced"
 break_glass_object_ids    = [] # ["<bg-01-object-id>", "<bg-02-object-id>"]
 
+# CTL-015 Defender for Cloud: plans pinned to Free (cost guardrail), security contact.
+manage_defender_plans   = true
+manage_security_contact = true
+
 enable_teardown_rule = false

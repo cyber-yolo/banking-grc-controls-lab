@@ -23,3 +23,8 @@ output "evidence_storage_account" {
 output "deployed_rules" {
   value = sort(keys(azurerm_sentinel_alert_rule_scheduled.rule))
 }
+
+output "defender_plans_pinned_free" {
+  description = "Defender for Cloud plans kept on the Free tier by Terraform (CTL-015-A3)."
+  value       = sort(keys(azurerm_security_center_subscription_pricing.free))
+}

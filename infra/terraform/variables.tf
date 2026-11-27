@@ -174,3 +174,35 @@ variable "break_glass_object_ids" {
     error_message = "break_glass_object_ids: at most two accounts (CTL-001-A2)."
   }
 }
+
+variable "manage_defender_plans" {
+  description = "CTL-015: pin the Defender for Cloud plans in defender_free_plans to the Free tier (cost guardrail)."
+  type        = bool
+  default     = true
+}
+
+variable "defender_free_plans" {
+  description = "Defender for Cloud plans pinned to Free. CloudPosture Free is foundational CSPM."
+  type        = list(string)
+  default     = ["CloudPosture", "VirtualMachines", "StorageAccounts", "KeyVaults", "Arm", "AppServices", "SqlServers", "Containers"]
+
+  validation {
+    condition     = contains(var.defender_free_plans, "CloudPosture")
+    error_message = "defender_free_plans must contain CloudPosture (foundational CSPM, CTL-015-A3)."
+  }
+
+  validation {
+    condition = alltrue([for p in var.defender_free_plans : contains([
+      "AI", "Api", "AppServices", "Arm", "CloudPosture", "ContainerRegistry", "Containers", "CosmosDbs", "Dns",
+      "KeyVaults", "KubernetesService", "OpenSourceRelationalDatabases", "SqlServers", "SqlServerVirtualMachines",
+      "StorageAccounts", "VirtualMachines",
+    ], p)])
+    error_message = "defender_free_plans: unknown plan name (see the list in variables.tf)."
+  }
+}
+
+variable "manage_security_contact" {
+  description = "CTL-015: set the Defender for Cloud security contact to the first budget address."
+  type        = bool
+  default     = true
+}

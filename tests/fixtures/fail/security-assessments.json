@@ -1,0 +1,67 @@
+{
+  "item": "SecurityAssessments",
+  "method": "fixture",
+  "target": "synthetic",
+  "collected_at": "2026-12-03T14:05:00Z",
+  "status": "ok",
+  "error": null,
+  "value": [
+    {
+      "name": "assess-owner-mfa",
+      "properties": {
+        "displayName": "Accounts with owner permissions on Azure resources should be MFA enabled",
+        "resourceDetails": {
+          "Source": "Azure",
+          "ResourceName": "subscription"
+        },
+        "status": {
+          "code": "Unhealthy",
+          "firstEvaluationDate": "2026-10-01T10:00:00Z",
+          "statusChangeDate": "2026-10-01T10:00:00Z"
+        },
+        "metadata": {
+          "displayName": "Accounts with owner permissions on Azure resources should be MFA enabled",
+          "severity": "High"
+        }
+      }
+    },
+    {
+      "name": "assess-two-owners",
+      "properties": {
+        "displayName": "There should be more than one owner assigned to subscriptions",
+        "resourceDetails": {
+          "Source": "Azure",
+          "ResourceName": "subscription"
+        },
+        "status": {
+          "code": "Unhealthy",
+          "firstEvaluationDate": "2026-11-25T10:00:00Z",
+          "statusChangeDate": "2026-11-25T10:00:00Z"
+        },
+        "metadata": {
+          "displayName": "There should be more than one owner assigned to subscriptions",
+          "severity": "High"
+        }
+      }
+    },
+    {
+      "name": "assess-vnet-rules",
+      "properties": {
+        "displayName": "Storage accounts should restrict network access using virtual network rules",
+        "resourceDetails": {
+          "Source": "Azure",
+          "ResourceName": "st-evidence"
+        },
+        "status": {
+          "code": "Unhealthy",
+          "firstEvaluationDate": "2026-11-25T10:00:00Z",
+          "statusChangeDate": "2026-11-25T10:00:00Z"
+        },
+        "metadata": {
+          "displayName": "Storage accounts should restrict network access using virtual network rules",
+          "severity": "Medium"
+        }
+      }
+    }
+  ]
+}

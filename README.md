@@ -25,7 +25,7 @@ Automation does the collecting and the checking. It does not decide whether a ga
 | Luxembourg | Law of 5 April 1993 on the financial sector (professional secrecy); CSSF Circulars 20/750, 22/806, 25/882, 12/552 as amended | `requirements/lu-cssf.yaml` |
 | Switzerland | FINMA Circular 2023/1 (operational risks and resilience), FINMA Circular 2018/3 (outsourcing), FINMA guidance on cyber attack reporting and on AI; Banking Act Art. 47; Federal Act on Data Protection and its ordinance | `requirements/ch-finma.yaml` |
 
-56 requirements: 22 in scope, 25 partly, 9 explicitly out with a reason. See [`docs/02-regulatory-scope.md`](docs/02-regulatory-scope.md) for applicability (which rule binds which entity) and the verification protocol.
+57 requirements: 22 in scope, 26 partly, 9 explicitly out with a reason. See [`docs/02-regulatory-scope.md`](docs/02-regulatory-scope.md) for applicability (which rule binds which entity) and the verification protocol.
 
 ## Controls
 
@@ -34,14 +34,14 @@ Automation does the collecting and the checking. It does not decide whether a ga
 | Domain | Controls |
 |---|---|
 | Identity and access | CTL-001 MFA for all users, CTL-002 legacy authentication blocked |
-| Privileged access | CTL-003 just-in-time access (PIM), CTL-004 emergency access accounts, CTL-005 periodic access review |
+| Privileged access (PAM) | CTL-003 just-in-time access with Entra PIM: no standing tier-0 access, eligibility that expires, activation with MFA, justification, 4-hour limit and approval, no assignment outside PIM; CTL-004 emergency access accounts; CTL-005 quarterly access review with independent reviewer and removal by default |
 | Non-human and AI agent identities | CTL-006 app and service principal hygiene, CTL-007 AI agent inventory and least privilege |
 | Data protection | CTL-008 client data kept out of AI assistants, CTL-009 client identifiers blocked in external e-mail |
 | Logging and detection | CTL-010 logs centralised and retained, CTL-011 detection coverage of banking scenarios |
 | Incident management | CTL-012 classification and reporting readiness (DORA, FINMA, GDPR, FADP clocks) |
 | Data residency | CTL-013 Swiss and EU regions only (Azure Policy) |
 | Third-party risk | CTL-014 register of information |
-| Cloud posture and governance | CTL-015 secure score baseline, CTL-016 framework governance and risk acceptances |
+| Cloud posture (CSPM) and governance | CTL-015 Defender for Cloud foundational CSPM (free): Microsoft cloud security benchmark as secure configuration baseline, secure score target, no paid plan, every High or Medium recommendation tracked to verified closure in `posture/`; CTL-016 framework governance and risk acceptances |
 
 Full matrix: [`docs/traceability-matrix.md`](docs/traceability-matrix.md) (generated). Current status: [`reports/compliance-dashboard.md`](reports/compliance-dashboard.md) (generated).
 
@@ -52,13 +52,14 @@ Full matrix: [`docs/traceability-matrix.md`](docs/traceability-matrix.md) (gener
 | Regulation | Paraphrased requirements with reference, confidence and lab scope | `requirements/` |
 | Controls | Control sheets, catalogue, test matrix | `controls/`, `testing/` |
 | Evidence | Read-only collectors (Graph, Azure, Purview), KQL effectiveness queries | `collectors/`, `queries/` |
-| Assurance | Evaluator with 32 assertions, unit tests on synthetic fixtures, dashboard and matrix generator | `tools/`, `tests/`, `reports/` |
+| Assurance | Evaluator with 46 assertions, unit tests on synthetic fixtures, dashboard and matrix generator | `tools/`, `tests/`, `reports/` |
 | Risk | Risk register, risk acceptances, banking threat scenarios | `risk/`, `scenarios/` |
+| Cloud posture | Remediation register of Defender for Cloud recommendations, with service levels | `posture/` |
 | AI governance | AI system inventory, agent identity controls | `ai-governance/` |
 | Third parties | Reduced register of information, exit plan outlines | `third-parties/` |
 | Incident readiness | Classification worksheet, reporting clocks, tabletop | `incident-response/`, `testing/tabletop/` |
 | Detection and response | 13 Sentinel analytics rules mapped to MITRE ATT&CK and to controls, 3 playbook designs | `detections/`, `playbooks/` |
-| Infrastructure as code | Terraform: workspace, Sentinel, diagnostics, budget, rules, Azure Policy, evidence store, optional Conditional Access | `infra/terraform/` |
+| Infrastructure as code | Terraform: workspace, Sentinel, diagnostics, budget, rules, Azure Policy, Defender for Cloud plans pinned to Free, evidence store, optional Conditional Access | `infra/terraform/` |
 
 ## Status
 

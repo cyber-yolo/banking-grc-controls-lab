@@ -8,30 +8,53 @@ status: written
 owner_role: Cloud platform engineering (first line)
 reviewer_role: ICT risk management (second line)
 objective: >
-  The lab subscription is assessed against the Microsoft cloud security
-  benchmark by Defender for Cloud (free foundational posture management) and
-  keeps a secure score at or above the lab target.
+  The lab subscription is assessed continuously against the Microsoft cloud
+  security benchmark (MCSB) as its secure configuration baseline, with Defender
+  for Cloud foundational CSPM only (free). The secure score stays at or above
+  the lab target, and every High or Medium recommendation is tracked in the
+  remediation register until the evidence shows it closed, within a service
+  level by severity.
 risks: [RSK-10]
-requirements: [REQ-RMF-05, REQ-DORA-04, REQ-CH-02]
+requirements: [REQ-RMF-05, REQ-RMF-07, REQ-DORA-04, REQ-CH-02, REQ-EBA-01, REQ-LU-02]
 implementation:
   platform: Microsoft Defender for Cloud (foundational CSPM, free)
-  configuration: Default Microsoft cloud security benchmark initiative; no paid plan enabled.
-  terraform: null
+  configuration: >
+    Default MCSB initiative assigned by Defender for Cloud; every Defender plan
+    kept on the Free tier (no paid workload protection); security contact set.
+    Remediation register in posture/remediation-register.csv with service levels
+    High 30 days, Medium 90 days, Low 180 days.
+  terraform: infra/terraform/defender.tf (Defender plans pinned to Free, security contact)
 evidence:
   - {id: EV-024, item: SecureScores, description: Secure score of the subscription}
+  - {id: EV-021, item: PolicyAssignments, description: Policy assignments of the subscription (MCSB initiative)}
+  - {id: EV-028, item: DefenderPlans, description: Pricing tier of every Defender for Cloud plan}
+  - {id: EV-029, item: RegulatoryComplianceStandards, description: Regulatory compliance standards and their passed and failed controls}
+  - {id: EV-030, item: SecurityAssessments, description: Recommendations per resource with status, severity and first evaluation date}
+  - {id: EV-031, item: RemediationRegister, description: Remediation register (repository file)}
 assertions:
   - {id: CTL-015-A1, test: design, text: Secure score is at least 70 % of the maximum}
+  - {id: CTL-015-A2, test: design, text: The Microsoft cloud security benchmark initiative is assigned to the subscription and enforced}
+  - {id: CTL-015-A3, test: design, text: "Every Defender plan is on the Free tier: foundational CSPM only (cost guardrail)"}
+  - {id: CTL-015-A4, test: design, text: The benchmark is assessed in regulatory compliance (state Passed or Failed, not Unsupported)}
+  - {id: CTL-015-A5, test: effectiveness, text: Every unhealthy High or Medium recommendation has a row in the remediation register}
+  - {id: CTL-015-A6, test: effectiveness, text: "No fix overdue against its service level, no row closed while still unhealthy, every acceptance backed by a risk acceptance record"}
 tests:
   design:
     id: TC-329
     steps:
-      - Two days after apply, run the collector for EV-024 and the evaluator.
-    expected: CTL-015-A1 PASS or each failing recommendation listed with a decision (fix or risk acceptance)
+      - Two days after apply, run the collector for EV-021, EV-024 and EV-028 to EV-030, and the evaluator.
+      - Update posture/remediation-register.csv with the High and Medium findings actually seen (origin run:<run id>).
+    expected: CTL-015-A1 to A4 PASS, or each failing recommendation listed with a decision (fix or risk acceptance)
   effectiveness:
     id: TC-330
     steps:
-      - Enable public blob access on a test storage account, wait for reassessment, collect and evaluate; then revert.
-    expected: Score drops and the recommendation appears; returns after revert
+      - Enable public blob access on a test storage account, wait for reassessment, collect and evaluate.
+      - Without a register row, CTL-015-A5 must FAIL naming the recommendation. Add the row (decision fix), revert the setting, wait for reassessment.
+      - Set the row to closed only after a run shows the recommendation Healthy; collect and evaluate again.
+    expected: Score drops and the recommendation appears; CTL-015-A5 FAIL then PASS; CTL-015-A6 PASS after the closure run
 detections: []
 limits:
-  - The 70 % target is a lab choice, not a regulatory threshold.
+  - The 70 % target and the service levels are lab choices, not regulatory thresholds.
+  - Foundational CSPM covers the benchmark and secure score only; attack paths, agentless scanning and other regulatory standards need the paid Defender CSPM plan, out of scope (cost).
+  - Recommendation names are matched as displayed by Defender for Cloud; a renamed recommendation shows as untracked until the register is updated.
+  - The regulatory compliance API used is a preview version and its availability on the free tier is TO VERIFY.

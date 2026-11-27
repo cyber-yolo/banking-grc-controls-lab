@@ -17,6 +17,7 @@ An Azure Monitor workbook on the lab workspace for the controls whose effectiven
 | MFA coverage, 7 days | CTL-001 | `queries/CTL-001-mfa-coverage.kql`, by day |
 | Legacy authentication attempts | CTL-002 | `queries/CTL-002-legacy-auth.kql`, by client |
 | PIM activations and justifications | CTL-003 | `queries/CTL-003-pim-activations.kql` |
+| Tier-0 assignments outside PIM | CTL-003 | `queries/CTL-003-direct-assignments.kql` |
 | Break-glass sign-ins | CTL-004 | DET-012 query over 30 days |
 | Credentials added to apps and agents | CTL-006, CTL-007 | DET-013 query over 30 days |
 | Table freshness | CTL-010 | `queries/CTL-010-table-freshness.kql` |

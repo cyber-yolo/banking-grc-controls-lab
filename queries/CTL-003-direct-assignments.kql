@@ -1,0 +1,18 @@
+// CTL-003 effectiveness: tier-0 role assignments made outside PIM over 30 days.
+// A PIM activation is also logged as "Add member to role", initiated by the MS-PIM
+// service: those are excluded. Break-glass accounts (bg-) are excluded, they hold
+// Global Administrator permanently by design (CTL-004).
+// Assumptions to confirm in TC-306 (docs/10-assumptions-and-limits.md, A-08).
+let tier0 = dynamic(["Global Administrator", "Privileged Role Administrator",
+    "Privileged Authentication Administrator", "Security Administrator"]);
+AuditLogs
+| where TimeGenerated > ago(30d)
+| where OperationName == "Add member to role" and Result =~ "success"
+| where tostring(InitiatedBy.app.displayName) != "MS-PIM"
+| mv-expand Target = TargetResources
+| where not(tolower(tostring(Target.userPrincipalName)) startswith "bg-")
+| mv-expand Prop = Target.modifiedProperties
+| where tostring(Prop.displayName) == "Role.DisplayName"
+| extend RoleName = trim(@'"', tostring(Prop.newValue))
+| where RoleName in~ (tier0)
+| summarize direct_assignments = count()

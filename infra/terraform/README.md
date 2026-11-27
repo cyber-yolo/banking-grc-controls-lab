@@ -23,6 +23,7 @@ New to Terraform? Read the five-minute model below, then the files in the order 
 | `terraform.tfvars.example` | Template of your values. Copy to `terraform.tfvars`, never commit it |
 | `locals.tf` | Tags, and loading of the rule sheets from `detections/rules/` |
 | `main.tf` | Resource group, Log Analytics workspace (daily cap), Sentinel onboarding |
+| `defender.tf` | Defender for Cloud: plans pinned to Free (foundational CSPM only, CTL-015), security contact |
 | `policy.tf` | Azure Policy: CTL-013 allowed locations (built-in, looked up by name), custom tag policy |
 | `evidence_store.tf` | Storage account and container for evidence runs, no shared keys, versioning |
 | `identity.tf` | Optional Conditional Access policies CTL-001 and CTL-002, report-only first |
@@ -60,6 +61,8 @@ terraform destroy              # teardown, read the plan before typing yes
 | Built-in policies looked up by display name | No definition ID in the repository | Same, or pinned IDs in a private repo |
 | No locked immutability on evidence | Teardown must stay possible | Locked WORM retention |
 | Conditional Access off by default, report-only first | A wrong policy can lock out the tenant | Change process with a pilot group |
+| Defender plans pinned to Free, no "Standard" option in the code | Zero cost; drift to a paid plan shows in `plan` | Plans chosen per workload, Defender CSPM paid plan for attack paths |
+| PIM role settings not in Terraform | No azuread 3.x resource for directory role policies found (TO VERIFY); portal or Graph | Graph-based pipeline or a provider resource if one exists |
 
 ## Known points to verify in Phase 0 and 1
 
@@ -68,3 +71,5 @@ terraform destroy              # teardown, read the plan before typing yes
 - Entra diagnostic setting needs a directory role on top of the subscription Owner role.
 - Creating Conditional Access policies with an Azure CLI sign-in (Graph permission of the CLI): see `identity.tf`.
 - Built-in policy display names "Allowed locations" and "Allowed locations for resource groups" still current.
+- Defender plan updates can conflict when applied in parallel (HTTP 409). If it happens, re-run with `terraform apply -parallelism=1`.
+- `azurerm_security_center_contact` argument names in provider 4.x (`name`, `alert_notifications`, `alerts_to_admins`).

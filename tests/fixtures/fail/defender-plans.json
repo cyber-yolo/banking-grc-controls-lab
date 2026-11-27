@@ -1,0 +1,58 @@
+{
+  "item": "DefenderPlans",
+  "method": "fixture",
+  "target": "synthetic",
+  "collected_at": "2026-12-03T14:05:00Z",
+  "status": "ok",
+  "error": null,
+  "value": [
+    {
+      "name": "CloudPosture",
+      "properties": {
+        "pricingTier": "Free"
+      }
+    },
+    {
+      "name": "VirtualMachines",
+      "properties": {
+        "pricingTier": "Free"
+      }
+    },
+    {
+      "name": "StorageAccounts",
+      "properties": {
+        "pricingTier": "Standard"
+      }
+    },
+    {
+      "name": "KeyVaults",
+      "properties": {
+        "pricingTier": "Free"
+      }
+    },
+    {
+      "name": "Arm",
+      "properties": {
+        "pricingTier": "Free"
+      }
+    },
+    {
+      "name": "AppServices",
+      "properties": {
+        "pricingTier": "Free"
+      }
+    },
+    {
+      "name": "SqlServers",
+      "properties": {
+        "pricingTier": "Free"
+      }
+    },
+    {
+      "name": "Containers",
+      "properties": {
+        "pricingTier": "Free"
+      }
+    }
+  ]
+}

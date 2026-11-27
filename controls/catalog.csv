@@ -3,7 +3,7 @@ CTL-001,Multi-factor authentication for all users,Identity and access,preventive
 CTL-002,Legacy authentication blocked,Identity and access,preventive,automated,daily,REQ-DORA-05;REQ-RMF-02;REQ-CH-02,TC-303,TC-304,written
 CTL-003,Just-in-time privileged access,Privileged access,preventive,automated,daily,REQ-DORA-04;REQ-RMF-02;REQ-EBA-01;REQ-CH-01;REQ-NIS2-02;REQ-LU-02,TC-305,TC-306,written
 CTL-004,Emergency access accounts,Privileged access,corrective,automated,daily,REQ-RMF-02;REQ-DORA-04,TC-307,TC-308,written
-CTL-005,Periodic review of privileged access,Privileged access,detective,semi-automated,quarterly,REQ-RMF-02;REQ-DORA-04;REQ-CH-01;REQ-EBA-03,TC-309,TC-310,written
+CTL-005,Periodic review of privileged access,Privileged access,detective,semi-automated,quarterly,REQ-RMF-02;REQ-DORA-04;REQ-CH-01;REQ-EBA-03;REQ-LU-02,TC-309,TC-310,written
 CTL-006,Non-human identity hygiene,Non-human and AI agent identities,preventive,automated,daily,REQ-DORA-03;REQ-RMF-01;REQ-RMF-02;REQ-CH-01;REQ-RMF-06,TC-311,TC-312,written
 CTL-007,AI agent inventory and least privilege,Non-human and AI agent identities,preventive,automated,weekly,REQ-AIA-02;REQ-AIA-05;REQ-CH-08;REQ-DORA-03;REQ-RMF-01;REQ-AIA-03;REQ-AIA-04,TC-313,TC-314,written
 CTL-008,Client data kept out of AI assistants,Data protection,preventive,manual,monthly,REQ-DORA-06;REQ-CH-03;REQ-CH-09;REQ-LU-01;REQ-AIA-05;REQ-GDPR-01;REQ-CH-05,TC-315,TC-316,draft
@@ -13,5 +13,5 @@ CTL-011,Detection coverage for banking threat scenarios,Logging and detection,de
 CTL-012,Incident classification and reporting readiness,Incident management,corrective,manual,quarterly,REQ-DORA-10;REQ-DORA-11;REQ-DORA-12;REQ-CH-06;REQ-CH-13;REQ-GDPR-02;REQ-LU-06,TC-323,TC-324,draft
 CTL-013,Cloud resources restricted to Swiss and EU regions,Data residency,preventive,automated,daily,REQ-CH-12;REQ-CH-05;REQ-GDPR-03;REQ-CH-03,TC-325,TC-326,written
 CTL-014,Register of information on ICT third-party providers,Third-party risk,detective,automated,per-change,REQ-DORA-14;REQ-LU-03;REQ-CH-07;REQ-EBA-02,TC-327,TC-328,written
-CTL-015,Cloud security posture baseline,Cloud posture,detective,automated,weekly,REQ-RMF-05;REQ-DORA-04;REQ-CH-02,TC-329,TC-330,written
+CTL-015,Cloud security posture baseline,Cloud posture,detective,automated,weekly,REQ-RMF-05;REQ-RMF-07;REQ-DORA-04;REQ-CH-02;REQ-EBA-01;REQ-LU-02,TC-329,TC-330,written
 CTL-016,Control framework governance and reporting,Governance,directive,semi-automated,quarterly,REQ-DORA-01;REQ-DORA-02;REQ-LU-05;REQ-EBA-03;REQ-LU-02,TC-331,TC-332,written

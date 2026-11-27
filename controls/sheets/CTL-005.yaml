@@ -9,30 +9,40 @@ owner_role: Role owners (first line)
 reviewer_role: ICT risk management (second line)
 objective: >
   Eligible and active assignments to privileged roles are reviewed at least
-  every quarter by a reviewer other than the holder, and unapproved access is
-  removed.
+  every quarter by a reviewer other than the holder, a justification is given
+  for every access kept, and access nobody confirms is removed automatically.
 risks: [RSK-02]
-requirements: [REQ-RMF-02, REQ-DORA-04, REQ-CH-01, REQ-EBA-03]
+requirements: [REQ-RMF-02, REQ-DORA-04, REQ-CH-01, REQ-EBA-03, REQ-LU-02]
 implementation:
   platform: Microsoft Entra ID Governance access reviews
-  configuration: Recurring access review on privileged directory roles, quarterly, auto-apply results, removal if no response.
+  configuration: >
+    Recurring access review on privileged directory roles (eligible and active),
+    quarterly, 7-day duration, reviewer named (IAM lead role, not the holder),
+    justification required on approval, auto-apply results, default decision
+    Deny when the reviewer does not answer.
   terraform: null
 evidence:
-  - {id: EV-009, item: AccessReviewDefinitions, description: Access review definitions with scope and recurrence}
+  - {id: EV-009, item: AccessReviewDefinitions, description: Access review definitions with scope, reviewers, settings, recurrence and instances}
 assertions:
   - {id: CTL-005-A1, test: design, text: An access review definition scopes privileged directory role assignments}
   - {id: CTL-005-A2, test: design, text: Its recurrence is at most three months}
+  - {id: CTL-005-A3, test: design, text: "It auto-applies decisions, removes access when the reviewer does not answer and requires a justification to keep access"}
+  - {id: CTL-005-A4, test: design, text: "Reviewers are named and are not the access holders (no self-review)"}
+  - {id: CTL-005-A5, test: effectiveness, text: At least one instance of the role review completed in the last 92 days}
 tests:
   design:
     id: TC-309
     steps:
-      - Create the review. Run the collector for EV-009 and the evaluator.
-    expected: CTL-005-A1 and CTL-005-A2 PASS
+      - Create the review with the configuration above. Run the collector for EV-009 and the evaluator.
+    expected: CTL-005-A1 to CTL-005-A4 PASS
   effectiveness:
     id: TC-310
     steps:
       - Start one review instance on demand, deny user2's eligible assignment, let results apply.
-    expected: user2 eligibility removed; decision history exported as evidence
+      - Run the collector for EV-009 and the evaluator.
+    expected: user2 eligibility removed; CTL-005-A5 PASS; decision history exported as evidence
 detections: []
 limits:
   - A 30-day lab cannot show two quarterly cycles; effectiveness is shown on one on-demand instance only.
+  - How Graph represents a self-review on role reviews is TO VERIFY; CTL-005-A4 treats a reviewer query on the principal as self-review.
+  - $expand=instances on review definitions is TO VERIFY (collectors/items.csv).
