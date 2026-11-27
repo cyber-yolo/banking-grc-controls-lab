@@ -11,6 +11,14 @@
       "displayName": "Global Administrator"
     },
     {
+      "id": "role-pra",
+      "displayName": "Privileged Role Administrator"
+    },
+    {
+      "id": "role-paa",
+      "displayName": "Privileged Authentication Administrator"
+    },
+    {
       "id": "role-secadmin",
       "displayName": "Security Administrator"
     },

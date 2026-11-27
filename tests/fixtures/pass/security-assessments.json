@@ -1,0 +1,86 @@
+{
+  "item": "SecurityAssessments",
+  "method": "fixture",
+  "target": "synthetic",
+  "collected_at": "2026-12-03T14:05:00Z",
+  "status": "ok",
+  "error": null,
+  "value": [
+    {
+      "name": "assess-owner-mfa",
+      "properties": {
+        "displayName": "Accounts with owner permissions on Azure resources should be MFA enabled",
+        "resourceDetails": {
+          "Source": "Azure",
+          "ResourceName": "subscription"
+        },
+        "status": {
+          "code": "Unhealthy",
+          "firstEvaluationDate": "2026-11-25T10:00:00Z",
+          "statusChangeDate": "2026-11-25T10:00:00Z"
+        },
+        "metadata": {
+          "displayName": "Accounts with owner permissions on Azure resources should be MFA enabled",
+          "severity": "High"
+        }
+      }
+    },
+    {
+      "name": "assess-two-owners",
+      "properties": {
+        "displayName": "There should be more than one owner assigned to subscriptions",
+        "resourceDetails": {
+          "Source": "Azure",
+          "ResourceName": "subscription"
+        },
+        "status": {
+          "code": "Unhealthy",
+          "firstEvaluationDate": "2026-11-25T10:00:00Z",
+          "statusChangeDate": "2026-11-25T10:00:00Z"
+        },
+        "metadata": {
+          "displayName": "There should be more than one owner assigned to subscriptions",
+          "severity": "High"
+        }
+      }
+    },
+    {
+      "name": "assess-private-link",
+      "properties": {
+        "displayName": "Storage account should use a private link connection",
+        "resourceDetails": {
+          "Source": "Azure",
+          "ResourceName": "st-evidence"
+        },
+        "status": {
+          "code": "Unhealthy",
+          "firstEvaluationDate": "2026-11-25T10:00:00Z",
+          "statusChangeDate": "2026-11-25T10:00:00Z"
+        },
+        "metadata": {
+          "displayName": "Storage account should use a private link connection",
+          "severity": "Low"
+        }
+      }
+    },
+    {
+      "name": "assess-secure-transfer",
+      "properties": {
+        "displayName": "Secure transfer to storage accounts should be enabled",
+        "resourceDetails": {
+          "Source": "Azure",
+          "ResourceName": "st-evidence"
+        },
+        "status": {
+          "code": "Healthy",
+          "firstEvaluationDate": "2026-11-25T10:00:00Z",
+          "statusChangeDate": "2026-11-25T10:00:00Z"
+        },
+        "metadata": {
+          "displayName": "Secure transfer to storage accounts should be enabled",
+          "severity": "High"
+        }
+      }
+    }
+  ]
+}

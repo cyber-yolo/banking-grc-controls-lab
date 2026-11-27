@@ -9,34 +9,62 @@ owner_role: IAM engineering (first line)
 reviewer_role: ICT risk management (second line)
 objective: >
   Nobody holds a permanent tier-0 Entra ID role except the break-glass accounts.
-  Administrators are eligible through Privileged Identity Management and
-  activate the role for a limited time with MFA and a justification.
+  Administrators are eligible through Privileged Identity Management (PIM),
+  eligibility itself expires, and every activation is time-limited, needs MFA
+  and a justification, and for the two most powerful roles a second person's
+  approval. Tier-0 roles are never assigned outside PIM.
 risks: [RSK-02]
 requirements: [REQ-DORA-04, REQ-RMF-02, REQ-EBA-01, REQ-CH-01, REQ-NIS2-02, REQ-LU-02]
 implementation:
   platform: Microsoft Entra ID Privileged Identity Management
-  configuration: Tier-0 roles (Global Administrator, Privileged Role Administrator, Privileged Authentication Administrator, Security Administrator) assigned as eligible; activation requires MFA and justification, maximum 4 hours.
-  terraform: null
+  configuration: >
+    Tier-0 roles (Global Administrator, Privileged Role Administrator,
+    Privileged Authentication Administrator, Security Administrator) assigned as
+    eligible, eligibility limited to 180 days (365 maximum). Role settings:
+    activation requires MFA (or an authentication context) and a justification,
+    maximum 4 hours; Global Administrator and Privileged Role Administrator also
+    require approval by a named approver. At most four Global Administrator
+    holders, break-glass accounts included.
+  terraform: >
+    null. PIM role settings are set in the portal or with Graph PATCH on
+    roleManagementPolicies (docs/06-lab-setup.md); no azuread 3.x resource for
+    directory role policies was found (TO VERIFY).
 evidence:
   - {id: EV-004, item: RoleDefinitions, description: Directory role definitions (names)}
   - {id: EV-005, item: RoleAssignmentInstances, description: Active role assignments with assignment type and end date}
   - {id: EV-006, item: RoleEligibilityInstances, description: Eligible role assignments}
   - {id: EV-007, item: KqlPimActivations, description: PIM activations and justifications over 30 days}
+  - {id: EV-026, item: RoleManagementPolicies, description: PIM role settings (activation, approval and expiration rules) of every directory role}
+  - {id: EV-027, item: KqlDirectPrivilegedAssignments, description: Tier-0 role assignments made outside PIM over 30 days}
 assertions:
   - {id: CTL-003-A1, test: design, text: No permanent (assigned, no end date) tier-0 assignment except break-glass accounts}
   - {id: CTL-003-A2, test: design, text: At least one eligible tier-0 assignment exists (JIT is in use)}
   - {id: CTL-003-A3, test: effectiveness, text: Every PIM activation over 30 days carries a justification}
+  - {id: CTL-003-A4, test: design, text: Activation of every tier-0 role requires MFA (or an authentication context) and a justification}
+  - {id: CTL-003-A5, test: design, text: Maximum activation duration of every tier-0 role is 4 hours or less}
+  - {id: CTL-003-A6, test: design, text: Activation of Global Administrator and Privileged Role Administrator requires approval by at least one named approver}
+  - {id: CTL-003-A7, test: design, text: Eligible assignments to tier-0 roles must expire, after 365 days at most}
+  - {id: CTL-003-A8, test: design, text: At most four Global Administrator holders, active or eligible, break-glass accounts included}
+  - {id: CTL-003-A9, test: effectiveness, text: No tier-0 role assigned outside PIM over 30 days (break-glass accounts excluded)}
 tests:
   design:
     id: TC-305
     steps:
-      - Make the lab admin eligible (not active) for Security Administrator. Run the collector for EV-004 to EV-006 and the evaluator.
-    expected: CTL-003-A1 and CTL-003-A2 PASS
+      - Make the lab admin eligible (not active) for Security Administrator and Global Administrator, with an end date 180 days ahead.
+      - Set the PIM role settings of the four tier-0 roles as in the implementation above.
+      - Run the collector for EV-004 to EV-006 and EV-026, and the evaluator.
+      - Negative check, then revert. Set Security Administrator maximum activation to 8 hours and collect again.
+    expected: CTL-003-A1, A2, A4 to A8 PASS; with the 8-hour setting CTL-003-A5 FAILS naming Security Administrator
   effectiveness:
     id: TC-306
     steps:
-      - Activate Security Administrator twice with a justification. Run the collector for EV-007 and the evaluator.
-    expected: CTL-003-A3 PASS with 2 activations
+      - Activate Security Administrator twice with a justification.
+      - Request Global Administrator activation; approve it from user2, the named approver.
+      - Run the collector for EV-007 and EV-027, and the evaluator.
+    expected: CTL-003-A3 PASS with at least 2 activations; CTL-003-A9 PASS with 0 direct assignments; the approval visible in AuditLogs
 detections: [DET-006]
 limits:
-  - PIM role settings (MFA on activation, maximum duration) are checked manually in the portal in this version; Graph endpoint for role management policies TO VERIFY.
+  - Graph v1.0 roleManagementPolicyAssignments with $expand=policy($expand=rules) is the documented path; the URL encoding of its filter by the collector is TO VERIFY at the first run.
+  - Rule ids (Enablement_EndUser_Assignment, Expiration_EndUser_Assignment, Approval_EndUser_Assignment, Expiration_Admin_Eligibility) are Microsoft's fixed names, recalled from the Graph documentation and TO VERIFY.
+  - The 4-hour, 365-day and four-holder limits are lab choices, not regulatory thresholds. A bank sets them in its access control policy.
+  - In a 30-day lab the eligibility expiry is shown by configuration, not by an assignment actually expiring.

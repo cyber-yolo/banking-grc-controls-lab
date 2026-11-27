@@ -37,6 +37,22 @@
       "principal": {
         "userPrincipalName": "admin@contoso.example"
       }
+    },
+    {
+      "roleDefinitionId": "role-ga",
+      "assignmentType": "Activated",
+      "endDateTime": "2026-12-03T18:00:00Z",
+      "principal": {
+        "userPrincipalName": "user2@contoso.example"
+      }
+    },
+    {
+      "roleDefinitionId": "role-ga",
+      "assignmentType": "Activated",
+      "endDateTime": "2026-12-03T18:00:00Z",
+      "principal": {
+        "userPrincipalName": "user3@contoso.example"
+      }
     }
   ]
 }

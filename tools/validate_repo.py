@@ -7,7 +7,8 @@
 3. Detection catalogue: every rule sheet is complete and consistent with its
    KQL file, its test IDs, its controls and detections/catalog.csv.
 4. Scenarios: every referenced risk, control and detection exists.
-5. Leak scan: no GUID, Azure resource path, e-mail address or Terraform state
+5. Remediation register: columns, unique IDs, allowed values, risk acceptance records.
+6. Leak scan: no GUID, Azure resource path, e-mail address or Terraform state
    outside explicit placeholders.
 
 Usage: python tools/validate_repo.py [--root PATH]
@@ -54,6 +55,7 @@ EMAIL = re.compile(r"\b[A-Za-z0-9._%+-]+@([A-Za-z0-9.-]+\.[A-Za-z]{2,})\b")
 ALLOWED_EMAIL_DOMAINS = {"example.com", "example.org", "example.net"}  # plus any *.example (RFC 2606)
 ALLOWED_GUIDS: set[str] = {
     "00000003-0000-0000-c000-000000000000",  # Microsoft Graph application ID, public and identical in every tenant
+    "1f3afdf9-d0c9-4c3d-847f-89da613e70a8",  # built-in Microsoft cloud security benchmark initiative, public (TO VERIFY)
 }
 
 CONTROL_KEYS = {
@@ -334,6 +336,44 @@ def check_scenarios(root: Path, errors: list[str]) -> None:
                 errors.append(f"scenarios.yaml: {s['id']} unknown detection {d}")
 
 
+REMEDIATION_COLUMNS = ["id", "recommendation", "decision", "owner_role", "ticket", "risk_acceptance",
+                       "status", "closed_on", "origin", "notes"]
+
+
+def check_remediation(root: Path, errors: list[str]) -> None:
+    path = root / "posture" / "remediation-register.csv"
+    if not path.exists():
+        errors.append("posture/remediation-register.csv missing")
+        return
+    with path.open(encoding="utf-8") as fh:
+        reader = csv.DictReader(fh)
+        if reader.fieldnames != REMEDIATION_COLUMNS:
+            errors.append(f"posture/remediation-register.csv columns must be {REMEDIATION_COLUMNS}")
+            return
+        rows = list(reader)
+    seen_ids, seen_recs = set(), set()
+    for r in rows:
+        where = f"posture/remediation-register.csv: {r['id']}"
+        if not re.match(r"^REM-\d{3}$", r["id"]):
+            errors.append(f"{where}: bad id")
+        if r["id"] in seen_ids or r["recommendation"] in seen_recs:
+            errors.append(f"{where}: duplicate id or recommendation")
+        seen_ids.add(r["id"])
+        seen_recs.add(r["recommendation"])
+        if r["decision"] not in {"fix", "accept"}:
+            errors.append(f"{where}: decision must be fix or accept")
+        if r["status"] not in {"open", "closed"}:
+            errors.append(f"{where}: status must be open or closed")
+        if not r["owner_role"]:
+            errors.append(f"{where}: owner_role missing")
+        if r["status"] == "closed" and not re.match(r"^\d{4}-\d{2}-\d{2}$", r["closed_on"]):
+            errors.append(f"{where}: closed without closed_on date")
+        if r["decision"] == "accept" and not (root / "risk" / "acceptances" / f"{r['risk_acceptance']}.md").exists():
+            errors.append(f"{where}: accepted without an existing risk acceptance record")
+        if r["origin"] != "anticipated" and not r["origin"].startswith("run:"):
+            errors.append(f"{where}: origin must be anticipated or run:<run id>")
+
+
 def check_leaks(root: Path, errors: list[str]) -> None:
     files = list(iter_files(root))
     for path in files:
@@ -367,6 +407,7 @@ def main() -> int:
     check_controls(root, errors)
     check_rules(root, errors)
     check_scenarios(root, errors)
+    check_remediation(root, errors)
     check_leaks(root, errors)
     for e in errors:
         print(f"ERROR {e}")

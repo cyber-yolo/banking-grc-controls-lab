@@ -1,0 +1,215 @@
+{
+  "item": "RoleManagementPolicies",
+  "method": "fixture",
+  "target": "synthetic",
+  "collected_at": "2026-12-03T14:05:00Z",
+  "status": "ok",
+  "error": null,
+  "value": [
+    {
+      "id": "pa-role-ga",
+      "scopeId": "/",
+      "scopeType": "DirectoryRole",
+      "roleDefinitionId": "role-ga",
+      "policy": {
+        "id": "pol-role-ga",
+        "rules": [
+          {
+            "@odata.type": "#microsoft.graph.unifiedRoleManagementPolicyEnablementRule",
+            "id": "Enablement_EndUser_Assignment",
+            "enabledRules": [
+              "MultiFactorAuthentication",
+              "Justification"
+            ]
+          },
+          {
+            "@odata.type": "#microsoft.graph.unifiedRoleManagementPolicyAuthenticationContextRule",
+            "id": "AuthenticationContext_EndUser_Assignment",
+            "isEnabled": false,
+            "claimValue": ""
+          },
+          {
+            "@odata.type": "#microsoft.graph.unifiedRoleManagementPolicyExpirationRule",
+            "id": "Expiration_EndUser_Assignment",
+            "isExpirationRequired": true,
+            "maximumDuration": "PT4H"
+          },
+          {
+            "@odata.type": "#microsoft.graph.unifiedRoleManagementPolicyExpirationRule",
+            "id": "Expiration_Admin_Eligibility",
+            "isExpirationRequired": true,
+            "maximumDuration": "P180D"
+          },
+          {
+            "@odata.type": "#microsoft.graph.unifiedRoleManagementPolicyApprovalRule",
+            "id": "Approval_EndUser_Assignment",
+            "setting": {
+              "isApprovalRequired": true,
+              "approvalStages": [
+                {
+                  "primaryApprovers": [
+                    {
+                      "@odata.type": "#microsoft.graph.singleUser",
+                      "userId": "user-iam-lead"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "pa-role-pra",
+      "scopeId": "/",
+      "scopeType": "DirectoryRole",
+      "roleDefinitionId": "role-pra",
+      "policy": {
+        "id": "pol-role-pra",
+        "rules": [
+          {
+            "@odata.type": "#microsoft.graph.unifiedRoleManagementPolicyEnablementRule",
+            "id": "Enablement_EndUser_Assignment",
+            "enabledRules": [
+              "MultiFactorAuthentication",
+              "Justification"
+            ]
+          },
+          {
+            "@odata.type": "#microsoft.graph.unifiedRoleManagementPolicyAuthenticationContextRule",
+            "id": "AuthenticationContext_EndUser_Assignment",
+            "isEnabled": false,
+            "claimValue": ""
+          },
+          {
+            "@odata.type": "#microsoft.graph.unifiedRoleManagementPolicyExpirationRule",
+            "id": "Expiration_EndUser_Assignment",
+            "isExpirationRequired": true,
+            "maximumDuration": "PT4H"
+          },
+          {
+            "@odata.type": "#microsoft.graph.unifiedRoleManagementPolicyExpirationRule",
+            "id": "Expiration_Admin_Eligibility",
+            "isExpirationRequired": true,
+            "maximumDuration": "P180D"
+          },
+          {
+            "@odata.type": "#microsoft.graph.unifiedRoleManagementPolicyApprovalRule",
+            "id": "Approval_EndUser_Assignment",
+            "setting": {
+              "isApprovalRequired": true,
+              "approvalStages": [
+                {
+                  "primaryApprovers": [
+                    {
+                      "@odata.type": "#microsoft.graph.singleUser",
+                      "userId": "user-iam-lead"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "pa-role-paa",
+      "scopeId": "/",
+      "scopeType": "DirectoryRole",
+      "roleDefinitionId": "role-paa",
+      "policy": {
+        "id": "pol-role-paa",
+        "rules": [
+          {
+            "@odata.type": "#microsoft.graph.unifiedRoleManagementPolicyEnablementRule",
+            "id": "Enablement_EndUser_Assignment",
+            "enabledRules": [
+              "Justification"
+            ]
+          },
+          {
+            "@odata.type": "#microsoft.graph.unifiedRoleManagementPolicyAuthenticationContextRule",
+            "id": "AuthenticationContext_EndUser_Assignment",
+            "isEnabled": true,
+            "claimValue": "c1"
+          },
+          {
+            "@odata.type": "#microsoft.graph.unifiedRoleManagementPolicyExpirationRule",
+            "id": "Expiration_EndUser_Assignment",
+            "isExpirationRequired": true,
+            "maximumDuration": "PT4H"
+          },
+          {
+            "@odata.type": "#microsoft.graph.unifiedRoleManagementPolicyExpirationRule",
+            "id": "Expiration_Admin_Eligibility",
+            "isExpirationRequired": true,
+            "maximumDuration": "P180D"
+          },
+          {
+            "@odata.type": "#microsoft.graph.unifiedRoleManagementPolicyApprovalRule",
+            "id": "Approval_EndUser_Assignment",
+            "setting": {
+              "isApprovalRequired": false,
+              "approvalStages": [
+                {
+                  "primaryApprovers": []
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "pa-role-secadmin",
+      "scopeId": "/",
+      "scopeType": "DirectoryRole",
+      "roleDefinitionId": "role-secadmin",
+      "policy": {
+        "id": "pol-role-secadmin",
+        "rules": [
+          {
+            "@odata.type": "#microsoft.graph.unifiedRoleManagementPolicyEnablementRule",
+            "id": "Enablement_EndUser_Assignment",
+            "enabledRules": [
+              "MultiFactorAuthentication",
+              "Justification"
+            ]
+          },
+          {
+            "@odata.type": "#microsoft.graph.unifiedRoleManagementPolicyAuthenticationContextRule",
+            "id": "AuthenticationContext_EndUser_Assignment",
+            "isEnabled": false,
+            "claimValue": ""
+          },
+          {
+            "@odata.type": "#microsoft.graph.unifiedRoleManagementPolicyExpirationRule",
+            "id": "Expiration_EndUser_Assignment",
+            "isExpirationRequired": true,
+            "maximumDuration": "PT2H"
+          },
+          {
+            "@odata.type": "#microsoft.graph.unifiedRoleManagementPolicyExpirationRule",
+            "id": "Expiration_Admin_Eligibility",
+            "isExpirationRequired": true,
+            "maximumDuration": "P180D"
+          },
+          {
+            "@odata.type": "#microsoft.graph.unifiedRoleManagementPolicyApprovalRule",
+            "id": "Approval_EndUser_Assignment",
+            "setting": {
+              "isApprovalRequired": false,
+              "approvalStages": [
+                {
+                  "primaryApprovers": []
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

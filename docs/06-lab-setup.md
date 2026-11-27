@@ -56,9 +56,15 @@ Admin consent for the collector's read-only Graph scopes is given once, by the l
 ## 5. Identity controls (Phase 2)
 
 1. Conditional Access: `manage_conditional_access = true`, state report-only, apply. After 2 to 3 days of sign-in logs without unexpected impact, `conditional_access_state = "enabled"`, apply. If Terraform cannot create the policies (permission), create them in the portal with the same names.
-2. PIM: make admin eligible (not active) for tier-0 roles; activation with MFA and justification, 4 hours maximum.
-3. Access review on privileged roles, quarterly.
-4. App registrations for the tests: `app-grc-collector`, `app-agent-kyc-summary` (tag `ai-agent`), and the deliberately non-compliant `app-test-orphan`, `app-agent-shadow` (deleted after TC-311 and TC-313).
+2. PIM (CTL-003), in Entra admin center > Identity governance > Privileged Identity Management > Microsoft Entra roles > Settings, for each tier-0 role (Global Administrator, Privileged Role Administrator, Privileged Authentication Administrator, Security Administrator):
+   - Activation: maximum 4 hours; require MFA (or an authentication context) and a justification.
+   - Global Administrator and Privileged Role Administrator: require approval, approver user2 (the lab "IAM lead"). The approver must not be the requester.
+   - Assignment: do not allow permanent eligible assignment, expire after 180 days (365 maximum).
+   - Then make admin eligible (not active) for Security Administrator and Global Administrator, end date 180 days ahead.
+   - Check: run the collector for `RoleManagementPolicies` and the evaluator; CTL-003-A4 to A7 must PASS.
+3. Access review on privileged roles (CTL-005): Identity governance > Access reviews, scope "Microsoft Entra roles", eligible and active assignments, quarterly, 7 days, reviewer user2, justification required, auto-apply results, "If reviewers don't respond: remove access".
+4. Defender for Cloud (CTL-015): applied by Terraform (`defender.tf`). Two days later, open Defender for Cloud > Recommendations and Regulatory compliance; run the collector for `SecureScores`, `PolicyAssignments`, `DefenderPlans`, `RegulatoryComplianceStandards`, `SecurityAssessments`; update `posture/remediation-register.csv` with the High and Medium findings actually seen (TC-329).
+5. App registrations for the tests: `app-grc-collector`, `app-agent-kyc-summary` (tag `ai-agent`), and the deliberately non-compliant `app-test-orphan`, `app-agent-shadow` (deleted after TC-311 and TC-313).
 
 ## 6. Rules, playbooks, tabletop
 

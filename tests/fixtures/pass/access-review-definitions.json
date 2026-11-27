@@ -17,8 +17,27 @@
             "type": "absoluteMonthly",
             "interval": 3
           }
+        },
+        "autoApplyDecisionsEnabled": true,
+        "defaultDecisionEnabled": true,
+        "defaultDecision": "Deny",
+        "justificationRequiredOnApproval": true,
+        "instanceDurationInDays": 7
+      },
+      "reviewers": [
+        {
+          "query": "/users/user-iam-lead",
+          "queryType": "MicrosoftGraph"
         }
-      }
+      ],
+      "instances": [
+        {
+          "id": "inst-1",
+          "status": "Applied",
+          "startDateTime": "2026-11-20T08:00:00Z",
+          "endDateTime": "2026-11-27T08:00:00Z"
+        }
+      ]
     }
   ]
 }

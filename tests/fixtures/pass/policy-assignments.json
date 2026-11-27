@@ -13,6 +13,11 @@
     {
       "displayName": "CTL-013 Allowed locations for resource groups",
       "enforcementMode": "Default"
+    },
+    {
+      "displayName": "Microsoft cloud security benchmark",
+      "enforcementMode": "Default",
+      "policyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/1f3afdf9-d0c9-4c3d-847f-89da613e70a8"
     }
   ]
 }

@@ -1,0 +1,3 @@
+id,recommendation,decision,owner_role,ticket,risk_acceptance,status,closed_on,origin,notes
+REM-001,Accounts with owner permissions on Azure resources should be MFA enabled,fix,IAM engineering,,,open,,anticipated,Expected on a new subscription until CTL-001 is enforced; closes when the CTL-001 policy is enabled and the recommendation turns Healthy
+REM-002,There should be more than one owner assigned to subscriptions,fix,Cloud platform engineering,,,open,,anticipated,Expected with a single maintainer; fix by giving Owner to the break-glass account bg-01 (CTL-004)

@@ -1,0 +1,20 @@
+{
+  "item": "RegulatoryComplianceStandards",
+  "method": "fixture",
+  "target": "synthetic",
+  "collected_at": "2026-12-03T14:05:00Z",
+  "status": "ok",
+  "error": null,
+  "value": [
+    {
+      "name": "Microsoft-cloud-security-benchmark",
+      "properties": {
+        "state": "Failed",
+        "passedControls": 31,
+        "failedControls": 9,
+        "skippedControls": 0,
+        "unsupportedControls": 6
+      }
+    }
+  ]
+}

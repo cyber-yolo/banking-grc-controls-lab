@@ -40,3 +40,9 @@ requirements:
     confidence: low
     lab_scope: partial
     note: Identity inventory only.
+  - id: REQ-RMF-07
+    reference: Art. 11
+    topic: Data and system security procedures, including secure configuration baselines for ICT assets and their monitoring.
+    confidence: low
+    lab_scope: partial
+    note: Article title and the secure configuration baseline point are from memory, TO VERIFY on EUR-Lex. Lab covers the Azure subscription against the Microsoft cloud security benchmark, not servers or end-user devices.
