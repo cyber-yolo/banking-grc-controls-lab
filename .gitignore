@@ -1,0 +1,46 @@
+# Terraform: state, plans and local values contain IDs. Never commit.
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+tfplan
+terraform.tfvars
+*.auto.tfvars
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+# .terraform.lock.hcl IS committed (pins provider builds)
+
+# Lab evidence and exports (raw, may contain identifiers)
+evidence/
+lab-exports/
+*.evidence.zip
+
+# Credentials and local config
+.env
+.env.*
+*.pfx
+*.p12
+*.pem
+*.key
+*credentials*
+*secret*.json
+local.settings.json
+.lab-denylist
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# OS and editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
+
+# Generated evaluation results of a lab run (review, then commit the dashboard only)
+reports/results*.json
+.pytest_cache/
